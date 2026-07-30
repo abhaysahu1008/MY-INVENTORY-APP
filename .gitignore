@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+# AI & Agent Caches
+.claude/
+.agents/
+.windsurf/
+
 # testing
 /coverage
 
@@ -39,3 +44,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
