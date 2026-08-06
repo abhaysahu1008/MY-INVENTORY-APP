@@ -38,6 +38,10 @@ enum OrderStatus {
 model Company {
   id        Int      @id @default(autoincrement())
   name      String
+  email     String? // Official contact email
+  phone     String?
+  address   String?
+  logoUrl   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -78,15 +82,15 @@ model Warehouse {
 
 model User {
   id          Int        @id @default(autoincrement())
-  companyId   Int
-  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   Int?
+  company     Company?   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   warehouseId Int? // NULL for OWNER, assigned for MANAGER/EMPLOYEE
   warehouse   Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
 
   name      String
   email     String   @unique
   password  String // Hashed
-  role      Role     @default(EMPLOYEE)
+  role      Role     @default(OWNER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

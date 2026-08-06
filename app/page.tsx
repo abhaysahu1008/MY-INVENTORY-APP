@@ -47,7 +47,7 @@ export default function HomePage() {
             href="/register"
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition text-center"
           >
-            Register Your Company
+            Register
           </Link>
           <Link
             href="/login"
