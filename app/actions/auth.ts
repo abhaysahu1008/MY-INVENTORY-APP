@@ -4,11 +4,14 @@ import bcrypt, { hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "../lib/prisma";
+import { createSlug } from "../utils/helper";
 
 export async function registerUser(formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+
+  console.log(name, email, password);
 
   if (!name || !email || !password) {
     return { error: "All fields are required" };
@@ -86,6 +89,7 @@ export async function loginUser(formData: FormData) {
   try {
     const existingUser = await prisma.user.findUnique({
       where: { email },
+      include: { company: true }
     });
 
     if (!existingUser) {
@@ -120,7 +124,8 @@ export async function loginUser(formData: FormData) {
       user: {
         name: existingUser.name,
         email: existingUser.email,
-        role: existingUser.role
+        role: existingUser.role,
+        companySlug: existingUser.company?.name ? createSlug(existingUser.company.name) : null,
       },
     };
   } catch (error) {

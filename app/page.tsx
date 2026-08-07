@@ -15,13 +15,13 @@ export default function HomePage() {
         <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 rounded-lg transition"
+            className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 rounded-lg transition text-sm"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition text-sm"
           >
             Get Started
           </Link>
@@ -47,10 +47,10 @@ export default function HomePage() {
             href="/register"
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition text-center"
           >
-            Register
+            Register Company
           </Link>
           <Link
-            href="/login"
+            href="/dashboard"
             className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 rounded-lg border border-gray-300 shadow-sm transition text-center"
           >
             Go to Dashboard

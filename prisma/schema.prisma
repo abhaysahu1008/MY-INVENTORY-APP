@@ -38,7 +38,7 @@ enum OrderStatus {
 model Company {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String? // Official contact email
+  email     String?
   phone     String?
   address   String?
   logoUrl   String?

@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
 
@@ -25,6 +24,9 @@ export async function createCompany(formData: FormData) {
     return { error: "Invalid or expired session. Please log in again." };
   }
 
+  console.log(decoded);
+
+
   const user = await prisma.user.findUnique({
     where: { id: decoded.id },
   });
@@ -42,6 +44,7 @@ export async function createCompany(formData: FormData) {
   const phone = (formData.get("phone") as string) || null;
   const address = (formData.get("address") as string) || null;
   const logo = (formData.get("logo") as string) || null;
+
 
   if (!name || name.trim() === "") {
     return { error: "Company name is required." };
@@ -65,7 +68,7 @@ export async function createCompany(formData: FormData) {
       });
     });
 
-    return { success: true };
+    return { success: true, ownerId: user.id, companyName: name };
   } catch (err) {
     console.error("Database error creating company:", err);
     return { error: "Failed to create company. Please try again." };

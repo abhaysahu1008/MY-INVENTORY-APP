@@ -1,130 +1,101 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createStaff } from "../actions/addStaff";
 
-const AddStaffPage = () => {
+export default function AddStaffPage() {
   const router = useRouter();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const searchParams = useSearchParams();
+
+  const companyName = searchParams.get("company") || "";
+  const initialRole = searchParams.get("role") || "EMPLOYEE";
+
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function addStaff(formData: FormData) {
+  async function handleSubmit(formData: FormData) {
+    setError(null);
     setLoading(true);
-    setError("");
-    setSuccess("");
 
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const role = formData.get("role") as string;
+    formData.append("company", companyName);
+    formData.append("role", initialRole);
 
-    if (!name || !email || !password || !role) {
-      setError("All fields are required");
-      setLoading(false);
-      return;
-    }
+    const res = await createStaff(formData);
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      setLoading(false);
-      return;
-    }
-
-    if (role !== "EMPLOYEE" && role !== "MANAGER") {
-      setError("Please select a valid role");
-      setLoading(false);
-      return;
-    }
-
-    const result = await createStaff(formData);
-
-    if (result?.error) {
-      setError(result.error);
-      setLoading(false);
-      return;
-    }
-
-    setSuccess(`✅ ${role} added successfully!`);
     setLoading(false);
 
-    const form = document.querySelector("form") as HTMLFormElement;
-    form?.reset();
+    if (res?.error) {
+      setError(res.error);
+      return;
+    }
 
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
+    router.push(`/dashboard/${companyName}`);
+    router.refresh();
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Add Staff Member</h2>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
+      <div className="w-full max-w-md rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl text-zinc-100">
+        <h2 className="text-xl font-bold mb-1">Add Staff Member</h2>
+        {companyName && (
+          <p className="text-xs text-zinc-400 mb-6">
+            Adding staff for <span className="font-semibold text-zinc-200">{companyName}</span>
+          </p>
+        )}
 
-        <form action={addStaff} className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Full Name"
-            required
-            name="name"
-            className="p-2 border border-gray-300 rounded"
-          />
+        {error && (
+          <div className="mb-4 rounded bg-red-500/10 border border-red-500/20 p-3 text-xs text-red-400">
+            {error}
+          </div>
+        )}
 
-          <input
-            type="email"
-            placeholder="Email Address"
-            required
-            name="email"
-            className="p-2 border border-gray-300 rounded"
-          />
+        <form action={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1">Full Name *</label>
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="John Doe"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 focus:border-blue-600 focus:outline-none"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Temporary Password (min 8 chars)"
-            required
-            name="password"
-            minLength={8}
-            className="p-2 border border-gray-300 rounded"
-          />
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1">Email Address *</label>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="staff@company.com"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 focus:border-blue-600 focus:outline-none"
+            />
+          </div>
 
-          <select
-            name="role"
-            id="role"
-            required
-            defaultValue=""
-            className="p-2 border border-gray-300 rounded"
-          >
-            <option value="" disabled>
-              Select Role
-            </option>
-            <option value="MANAGER">MANAGER</option>
-            <option value="EMPLOYEE">EMPLOYEE</option>
-          </select>
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1">Temporary Password *</label>
+            <input
+              type="password"
+              name="password"
+              required
+              minLength={8}
+              placeholder="••••••••"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 focus:border-blue-600 focus:outline-none"
+            />
+          </div>
 
-          {error && (
-            <p className="text-red-500 text-sm bg-red-50 p-2 rounded">
-              ❌ {error}
-            </p>
-          )}
 
-          {success && (
-            <p className="text-green-500 text-sm bg-green-50 p-2 rounded">
-              {success}
-            </p>
-          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
+            className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-50"
           >
-            {loading ? "Adding..." : "Add Staff"}
+            {loading ? "Adding Staff..." : "Add Staff Member"}
           </button>
         </form>
       </div>
     </div>
   );
-};
-
-export default AddStaffPage;
+}

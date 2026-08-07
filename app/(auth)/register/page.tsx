@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { loginUser } from '../actions/auth';
+import { registerUser } from '../../actions/auth';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,11 +14,24 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
 
+    const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    if (!email || !password) {
+    if (!name || !email || !password) {
       setError("All fields are required");
+      setLoading(false);
+      return;
+    }
+
+    if (name.length < 2) {
+      setError("Name must be at least 2 characters");
+      setLoading(false);
+      return;
+    }
+
+    if (name.length > 50) {
+      setError("Name must be less than 50 characters");
       setLoading(false);
       return;
     }
@@ -49,7 +62,7 @@ const LoginPage = () => {
       return;
     }
 
-    const result = await loginUser(formData);
+    const result = await registerUser(formData);
 
     if (result?.error) {
       setError(result.error);
@@ -57,19 +70,7 @@ const LoginPage = () => {
       return;
     }
 
-    switch (result?.user?.role) {
-      case "OWNER":
-        router.push("/dashboard/owner");
-        break;
-      case "MANAGER":
-        router.push("/dashboard/manager");
-        break;
-      case "EMPLOYEE":
-        router.push("/pos");
-        break;
-      default:
-        router.push("/dashboard");
-    }
+    router.push('/dashboard/owner');
   }
 
   return (
@@ -78,6 +79,15 @@ const LoginPage = () => {
       <p style={{ color: '#666' }}>You will be the owner of your company</p>
 
       <form action={handleSubmit}>
+        <div style={{ marginBottom: '15px' }}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+            style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
+          />
+        </div>
 
         <div style={{ marginBottom: '15px' }}>
           <input
@@ -99,8 +109,6 @@ const LoginPage = () => {
             style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
           />
         </div>
-
-
 
         {error && (
           <p style={{
@@ -128,16 +136,15 @@ const LoginPage = () => {
             cursor: loading ? 'not-allowed' : 'pointer'
           }}
         >
-          {loading ? 'Login in...' : 'Login'}
+          {loading ? 'Creating Account...' : 'Register'}
         </button>
       </form>
 
       <p style={{ marginTop: '20px', textAlign: 'center' }}>
-        Dont have an account? <Link href="/register">Register</Link>
+        Already have an account? <Link href="/login">Login</Link>
       </p>
     </div>
   );
 };
 
-
-export default LoginPage;
+export default RegisterPage;

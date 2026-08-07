@@ -7,14 +7,9 @@ import { cookies } from "next/headers";
 import { prisma } from "../lib/prisma";
 
 export async function createStaff(formData: FormData) {
-
-  console.log(formData);
-
   try {
     const cookieStore = await cookies();
     const tokenCookie = cookieStore.get("token");
-
-
 
     if (!tokenCookie?.value) {
       return { error: "Unauthorized. Please log in." };
@@ -31,6 +26,11 @@ export async function createStaff(formData: FormData) {
 
     if (!owner || owner.role !== "OWNER") {
       return { error: "Unauthorized. Only owners can create staff." };
+    }
+
+    // Ensure the owner actually belongs to a company
+    if (!owner.companyId) {
+      return { error: "Please set up your company before adding staff." };
     }
 
     const name = formData.get("name") as string;
