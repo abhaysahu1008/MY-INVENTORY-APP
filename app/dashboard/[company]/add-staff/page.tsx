@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { createStaff } from "../actions/addStaff";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { createStaff } from "../../../actions/addStaff";
 
 export default function AddStaffPage() {
   const router = useRouter();

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
+import Header from "../components/Header";
 
 interface JWTPayload {
   id: number;
@@ -19,17 +20,23 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  let userRole = "";
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-
-    if (decoded.role === "EMPLOYEE") {
-      redirect("/pos");
-    }
-  } catch (error) {
-    console.log(error);
-
+    userRole = decoded.role;
+  } catch {
     redirect("/login");
   }
 
-  return <main>{children}</main>;
+  if (userRole === "EMPLOYEE") {
+    redirect("/pos");
+  }
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-zinc-100">
+      <Header />
+      {children}
+    </main>
+  );
 }

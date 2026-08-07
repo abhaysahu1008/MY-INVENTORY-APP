@@ -1,100 +1,121 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  let isAuthenticated = false;
+  if (token) {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET!);
+      isAuthenticated = true;
+    } catch {
+      isAuthenticated = false;
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
-      {/* Header / Navbar */}
-      <header className="w-full bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-            I
-          </div>
-          <span className="text-xl font-bold text-gray-900">InventoryOS</span>
-        </div>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between p-6 md:p-10 font-sans">
 
-        <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 rounded-lg transition text-sm"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition text-sm"
-          >
-            Get Started
-          </Link>
+      {/* Header */}
+      <header className="flex justify-between items-center pb-6 border-b border-zinc-800">
+        <span className="font-bold text-lg text-zinc-100">InventoryOS</span>
+
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 bg-yellow-400 text-zinc-950 font-semibold rounded-lg text-sm"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 text-zinc-300 font-medium text-sm"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 bg-yellow-400 text-zinc-950 font-semibold rounded-lg text-sm"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="max-w-5xl mx-auto px-6 py-16 text-center flex-1 flex flex-col justify-center items-center">
-        <span className="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full mb-6">
-          Multi-Tenant Warehouse Management
-        </span>
-
-        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6 max-w-3xl">
-          Complete Inventory & Stock Control for Your Business
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto my-12 text-center space-y-6">
+        <h1 className="text-3xl font-bold text-zinc-100">
+          Inventory OS
         </h1>
 
-        <p className="text-lg text-gray-600 mb-10 max-w-2xl">
-          Track stock across multiple warehouses, manage sales and purchase orders, receive low-stock alerts, and keep complete audit logs in real-time.
+        <p className="text-sm text-zinc-400 max-w-lg mx-auto">
+          Stock tracking, warehouse management, and order logging for multi-tenant setups.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md mb-16">
-          <Link
-            href="/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition text-center"
-          >
-            Register Company
-          </Link>
-          <Link
-            href="/dashboard"
-            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 rounded-lg border border-gray-300 shadow-sm transition text-center"
-          >
-            Go to Dashboard
-          </Link>
+        <div className="flex gap-4 justify-center pt-2">
+          {isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className="px-6 py-2.5 bg-yellow-400 text-zinc-950 font-semibold rounded-lg text-sm"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/register"
+                className="px-6 py-2.5 bg-yellow-400 text-zinc-950 font-semibold rounded-lg text-sm"
+              >
+                Register
+              </Link>
+              <Link
+                href="/dashboard"
+                className="px-6 py-2.5 bg-zinc-900 border border-zinc-800 text-zinc-200 font-medium rounded-lg text-sm"
+              >
+                Dashboard
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Key Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left w-full mt-8">
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
-              📦
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Multi-Warehouse</h3>
-            <p className="text-sm text-gray-600">
-              Manage inventory balances across multiple stock locations, assign staff to specific warehouses, and track movements.
+        {/* Feature List */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10 text-left">
+          <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg">
+            <h2 className="text-sm font-bold text-zinc-100">Warehouses</h2>
+            <p className="text-xs text-zinc-400 mt-1">
+              Manage inventory across multiple stock locations.
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
-              ⚡
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Real-time Movement Logs</h3>
-            <p className="text-sm text-gray-600">
-              Complete stock movement history for sales, purchases, adjustments, and returns with automated ledger entries.
+          <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg">
+            <h2 className="text-sm font-bold text-zinc-100">Logs</h2>
+            <p className="text-xs text-zinc-400 mt-1">
+              Record sales, purchases, adjustments, and returns.
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
-              🛒
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Sales & Purchase Orders</h3>
-            <p className="text-sm text-gray-600">
-              Streamline supplier purchase orders and customer POS sales orders directly linked to your stock balances.
+          <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg">
+            <h2 className="text-sm font-bold text-zinc-100">POS & Orders</h2>
+            <p className="text-xs text-zinc-400 mt-1">
+              Handle checkout operations and updates in real time.
             </p>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
-        <p>© {new Date().getFullYear()} InventoryOS. All rights reserved.</p>
+      <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-600">
+        InventoryOS © {new Date().getFullYear()}
       </footer>
+
     </div>
   );
 }

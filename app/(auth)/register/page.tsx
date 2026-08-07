@@ -74,75 +74,82 @@ const RegisterPage = () => {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
-      <h2>Create Your Account</h2>
-      <p style={{ color: '#666' }}>You will be the owner of your company</p>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
 
-      <form action={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            required
-            style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
-          />
+        {/* Header */}
+        <div className="space-y-1 text-center sm:text-left">
+          <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
+            <div className="w-7 h-7 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center">
+              I
+            </div>
+            <span className="font-bold text-lg text-zinc-100 tracking-tight">InventoryOS</span>
+          </div>
+          <h1 className="text-2xl font-bold text-zinc-100">Create Account</h1>
+          <p className="text-xs text-zinc-400">Register as a business owner to start managing your organization.</p>
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            required
-            style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
-          />
-        </div>
+        {/* Form */}
+        <form action={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              required
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-yellow-400 transition"
+            />
+          </div>
 
-        <div style={{ marginBottom: '15px' }}>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password (min 8 characters)"
-            required
-            minLength={8}
-            style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
-          />
-        </div>
+          <div>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="name@company.com"
+              required
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-yellow-400 transition"
+            />
+          </div>
 
-        {error && (
-          <p style={{
-            color: 'red',
-            backgroundColor: '#ffebee',
-            padding: '10px',
-            borderRadius: '4px',
-            marginBottom: '15px'
-          }}>
-            ❌ {error}
-          </p>
-        )}
+          <div>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Min. 8 characters"
+              required
+              minLength={8}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-yellow-400 transition"
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            backgroundColor: loading ? '#ccc' : '#0070f3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '16px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {loading ? 'Creating Account...' : 'Register'}
-        </button>
-      </form>
+          {error && (
+            <div className="bg-red-950/50 border border-red-900/50 text-red-200 text-xs p-3 rounded-xl flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
 
-      <p style={{ marginTop: '20px', textAlign: 'center' }}>
-        Already have an account? <Link href="/login">Login</Link>
-      </p>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-semibold rounded-xl py-3 text-sm transition shadow-md"
+          >
+            {loading ? 'Creating Account...' : 'Register'}
+          </button>
+        </form>
+
+        {/* Footer */}
+        <p className="text-center text-xs text-zinc-400">
+          Already have an account?{' '}
+          <Link href="/login" className="text-yellow-400 font-semibold hover:underline">
+            Login
+          </Link>
+        </p>
+
+      </div>
     </div>
   );
 };

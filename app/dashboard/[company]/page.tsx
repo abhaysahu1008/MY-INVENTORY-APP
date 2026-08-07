@@ -1,9 +1,9 @@
+import { Role } from "@prisma/client";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import jwt from "jsonwebtoken";
-import { Role } from "@prisma/client";
-import OwnerPage from "../../components/owner/page";
-import ManagerPage from "../../components/manager/page";
+import ManagerPage from "../../components/ManagerPage";
+import OwnerPage from "../../components/OwnerPage";
 
 
 interface JwtPayload {
@@ -27,7 +27,6 @@ export default async function DashboardPage({
 
   let userRole: Role;
 
-  // 1. Only wrap the JWT verification logic in try/catch
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     userRole = decoded.role;
@@ -35,7 +34,6 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  // 2. Return JSX cleanly outside of the try/catch block
   if (userRole === Role.OWNER) {
     return <OwnerPage companySlug={company} />;
   }

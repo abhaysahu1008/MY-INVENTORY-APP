@@ -18,18 +18,17 @@ export async function createStaff(formData: FormData) {
     const decoded = jwt.verify(
       tokenCookie.value,
       process.env.JWT_SECRET!
-    ) as { id: number; role: string };
+    ) as { id: number; role: Role };
 
-    const owner = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: decoded.id },
     });
 
-    if (!owner || owner.role !== "OWNER") {
-      return { error: "Unauthorized. Only owners can create staff." };
+    if (!user || (user.role !== "OWNER" && user.role !== "MANAGER")) {
+      return { error: "Unauthorized. Only owner and manager can create staff." };
     }
 
-    // Ensure the owner actually belongs to a company
-    if (!owner.companyId) {
+    if (!user.companyId) {
       return { error: "Please set up your company before adding staff." };
     }
 
@@ -50,7 +49,7 @@ export async function createStaff(formData: FormData) {
         email,
         password: hashedPassword,
         role: role,
-        companyId: owner.companyId,
+        companyId: user.companyId,
       },
     });
 

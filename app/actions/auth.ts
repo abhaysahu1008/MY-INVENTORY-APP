@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "../lib/prisma";
 import { createSlug } from "../utils/helper";
+import { redirect } from "next/navigation";
 
 export async function registerUser(formData: FormData) {
   const name = formData.get("name") as string;
@@ -132,4 +133,13 @@ export async function loginUser(formData: FormData) {
     console.error("Login error:", error);
     return { error: "Something went wrong. Please try again." };
   }
+}
+
+
+export async function LogoutUser() {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("token");
+
+  redirect("/login");
 }
