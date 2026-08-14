@@ -33,8 +33,11 @@ export default async function DashboardIndexPage() {
     redirect("/login");
   }
 
-  if (user.company?.name) {
-    const companySlug = user.company.name.toLowerCase().replace(/\s+/g, "-");
+  if (user.company?.id) {
+    const companySlug = user.company.name.toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
     redirect(`/dashboard/${companySlug}`);
   }
 

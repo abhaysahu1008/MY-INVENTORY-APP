@@ -125,9 +125,9 @@ model Product {
   sku         String   @unique
   barcode     String?  @unique
   description String?
-  price       Float // Selling Price
-  costPrice   Float // Purchase Cost
-  minStock    Int      @default(5) // Low stock threshold alert
+  price       Float
+  costPrice   Float
+  minStock    Int      @default(5)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

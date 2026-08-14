@@ -6,11 +6,11 @@ export default function Header() {
   return (
     <header className="w-full bg-zinc-950 border-b border-zinc-800 px-6 py-4 flex justify-between items-center">
       <Link href="/dashboard" className="flex items-center gap-2">
-        <div className="w-7 h-7 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center">
-          I
+        <div className="w-7 h-7 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center italic">
+          L
         </div>
-        <span className="font-bold text-lg text-zinc-100 tracking-tight">
-          InventoryOS
+        <span className="font-bold text-lg text-zinc-100 tracking-tight italic">
+          Ledgr
         </span>
       </Link>
 

@@ -33,8 +33,8 @@ CREATE TABLE "Warehouse" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "companyId" INTEGER NOT NULL,
-    "warehouseId" INTEGER,
+    -- "companyId" INTEGER NOT NULL,
+    -- "warehouseId" INTEGER,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
