@@ -36,11 +36,11 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  // Query database for the companyId using the userId from token
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { companyId: true },
   });
+
 
   if (userRole === Role.OWNER) {
     return (

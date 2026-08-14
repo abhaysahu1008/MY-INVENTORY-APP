@@ -5,8 +5,8 @@ const Sidebar = () => {
   return (
     <div>
       <Link href={""}><button>Add Warehouse</button></Link>
-      <Link href={""}><button>Add Staff</button></Link>
-      <Link href={""}><button>Add </button></Link>
+      <Link href={""}><button>Add Manager</button></Link>
+      <Link href={""}><button>Add Employee</button></Link>
 
     </div>
   )

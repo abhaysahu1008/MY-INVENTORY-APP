@@ -57,6 +57,12 @@ export async function addWarehouseAction(formData: FormData) {
       },
     });
 
+    await prisma.user.update({
+      where: {
+
+      }
+    })
+
     revalidatePath("/dashboard");
 
     return { success: true };

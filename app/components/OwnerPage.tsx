@@ -44,14 +44,14 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto">
                 <Link
-                  href={`/dashboard/${companySlug}/add-staff?role=MANAGER`}
+                  href={`/dashboard/${companySlug}/add-staff?role=MANAGER&companyId=${companyId}`}
                   className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
                 >
                   👤 Add Manager
                 </Link>
 
                 <Link
-                  href={`/dashboard/${companySlug}/add-staff?role=EMPLOYEE`}
+                  href={`/dashboard/${companySlug}/add-staff?role=EMPLOYEE&companyId=${companyId}`}
                   className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-yellow-100 text-yellow-950 font-semibold rounded-xl text-sm border border-yellow-300 transition shadow-sm w-full"
                 >
                   👥 Add Employee

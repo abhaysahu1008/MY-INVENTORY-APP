@@ -1,18 +1,39 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { createStaff } from "../../../actions/addStaff";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createStaff, getWarehouses } from "../../../actions/addStaff";
+
+interface Warehouse {
+  id: number;
+  name: string;
+}
 
 export default function AddStaffPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
 
-  const companyName = searchParams.get("company") || "";
+  const companyName = (params.company || params.companySlug || "") as string;
   const initialRole = searchParams.get("role") || "EMPLOYEE";
+  const companyId = searchParams.get("companyId") || "";
 
+  // Initialize with empty array to prevent .map() crash
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // 1. Fetch warehouses when the page loads
+  useEffect(() => {
+    async function loadWarehouses() {
+      if (!companyId) return;
+      const data = await getWarehouses(companyId);
+      if (data.warehouses) {
+        setWarehouses(data.warehouses);
+      }
+    }
+    loadWarehouses();
+  }, [companyId]);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
@@ -20,6 +41,7 @@ export default function AddStaffPage() {
 
     formData.append("company", companyName);
     formData.append("role", initialRole);
+    formData.append("companyId", companyId);
 
     const res = await createStaff(formData);
 
@@ -40,7 +62,8 @@ export default function AddStaffPage() {
         <h2 className="text-xl font-bold mb-1">Add Staff Member</h2>
         {companyName && (
           <p className="text-xs text-zinc-400 mb-6">
-            Adding staff for <span className="font-semibold text-zinc-200">{companyName}</span>
+            Adding <span className="font-semibold text-yellow-200">{initialRole}</span> for{" "}
+            <span className="font-semibold text-zinc-200">{companyName}</span>
           </p>
         )}
 
@@ -85,12 +108,25 @@ export default function AddStaffPage() {
             />
           </div>
 
-
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1">Assigned Warehouse</label>
+            <select
+              name="warehouseId"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 focus:border-blue-600 focus:outline-none"
+            >
+              <option value="">Select Warehouse (Optional)</option>
+              {warehouses.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-50"
+            className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-50 mt-2"
           >
             {loading ? "Adding Staff..." : "Add Staff Member"}
           </button>

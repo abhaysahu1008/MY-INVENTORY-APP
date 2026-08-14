@@ -6,6 +6,24 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "../lib/prisma";
 
+// Helper action to fetch warehouses for the select dropdown
+export async function getWarehouses(companyIdStr: string) {
+  try {
+    const companyId = Number(companyIdStr);
+    if (isNaN(companyId)) return { warehouses: [] };
+
+    const warehouses = await prisma.warehouse.findMany({
+      where: { companyId },
+      select: { id: true, name: true },
+    });
+
+    return { warehouses };
+  } catch (error) {
+    console.error("Error fetching warehouses:", error);
+    return { warehouses: [] };
+  }
+}
+
 export async function createStaff(formData: FormData) {
   try {
     const cookieStore = await cookies();
@@ -36,12 +54,15 @@ export async function createStaff(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const role = formData.get("role") as Role;
+    const companyIdRaw = formData.get("companyId") as string;
+    const warehouseIdRaw = formData.get("warehouseId") as string;
 
-    if (!name || !email || !password || !role) {
-      return { error: "All fields are required." };
+    if (!name || !email || !password || !role || !companyIdRaw) {
+      return { error: "All required fields must be provided." };
     }
 
     const hashedPassword = await hash(password, 10);
+    const warehouseId = warehouseIdRaw ? Number(warehouseIdRaw) : null;
 
     const newStaff = await prisma.user.create({
       data: {
@@ -50,6 +71,7 @@ export async function createStaff(formData: FormData) {
         password: hashedPassword,
         role: role,
         companyId: user.companyId,
+        ...(warehouseId && { warehouseId }), // Only set if a warehouse was selected
       },
     });
 
