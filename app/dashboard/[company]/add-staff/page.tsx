@@ -53,7 +53,7 @@ export default function AddStaffPage() {
     }
 
     router.push(`/dashboard/${companyName}`);
-    router.refresh();
+    // router.refresh();
   }
 
   return (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
 
@@ -76,8 +76,13 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
         </div>
       </div>
 
-      {companySlug && companyId && <StaffList companyId={companyId} />}
-      {companySlug && companyId && <Warehouses companyId={companyId} companySlug={companySlug} />}
+      <Suspense fallback={<div>Loading Staffs...</div>}>
+        {companySlug && companyId && <StaffList companyId={companyId} />}
+
+      </Suspense>
+      <Suspense fallback={<div>Loading Warehouse...</div>}>
+        {companySlug && companyId && <Warehouses companyId={companyId} companySlug={companySlug} />}
+      </Suspense>
 
     </div>
   );

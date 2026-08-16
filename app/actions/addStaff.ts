@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "../lib/prisma";
 
-// Helper action to fetch warehouses for the select dropdown
 export async function getWarehouses(companyIdStr: string) {
   try {
     const companyId = Number(companyIdStr);
