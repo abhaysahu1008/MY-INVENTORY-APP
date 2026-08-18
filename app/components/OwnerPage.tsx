@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { Suspense } from "react";
 import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
+import Categories from "./Categories";
 
 interface OwnerPageProps {
   companySlug?: string | null;
@@ -73,6 +74,7 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
               </Link>
             )}
           </div>
+          <Categories />
         </div>
       </div>
 

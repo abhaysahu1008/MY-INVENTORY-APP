@@ -23,7 +23,6 @@ export default function AddStaffPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 1. Fetch warehouses when the page loads
   useEffect(() => {
     async function loadWarehouses() {
       if (!companyId) return;
