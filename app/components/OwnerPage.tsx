@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
 import Categories from "./Categories";
+import AddProduct from "./AddProduct";
 
 interface OwnerPageProps {
   companySlug?: string | null;
@@ -75,6 +76,7 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
             )}
           </div>
           <Categories />
+          <AddProduct />
         </div>
       </div>
 

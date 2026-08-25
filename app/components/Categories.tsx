@@ -15,7 +15,6 @@ const Categories = () => {
 
     setLoading(false);
 
-    // Fix 3: Check result.success / result.error properly
     if (result?.error) {
       setMessage({ text: result.error, isError: true });
     } else if (result?.success) {

@@ -7,10 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// ==========================================
-// ENUMS
-// ==========================================
-
 enum Role {
   OWNER
   MANAGER
@@ -31,10 +27,6 @@ enum OrderStatus {
   CANCELLED
 }
 
-// ==========================================
-// 1. TENANTS & LOCATIONS
-// ==========================================
-
 model Company {
   id        Int      @id @default(autoincrement())
   name      String
@@ -45,7 +37,6 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   users          User[]
   warehouses     Warehouse[]
   categories     Category[]
@@ -68,17 +59,12 @@ model Warehouse {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   users          User[]
   inventories    Inventory[]
   stockMovements StockMovement[]
   salesOrders    SalesOrder[]
   purchaseOrders PurchaseOrder[]
 }
-
-// ==========================================
-// 2. USER AUTHENTICATION & ACCESS
-// ==========================================
 
 model User {
   id          Int        @id @default(autoincrement())
@@ -94,15 +80,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   stockMovements StockMovement[]
   salesOrders    SalesOrder[]
   purchaseOrders PurchaseOrder[]
 }
-
-// ==========================================
-// 3. CATALOG & CONTACTS
-// ==========================================
 
 model Category {
   id        Int      @id @default(autoincrement())
@@ -131,7 +112,6 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   inventories        Inventory[]
   stockMovements     StockMovement[]
   salesOrderItems    SalesOrderItem[]
@@ -163,10 +143,6 @@ model Customer {
   salesOrders SalesOrder[]
 }
 
-// ==========================================
-// 4. INVENTORY BALANCES & AUDIT TRAIL
-// ==========================================
-
 model Inventory {
   id          Int       @id @default(autoincrement())
   companyId   Int
@@ -179,7 +155,7 @@ model Inventory {
   quantity  Int      @default(0)
   updatedAt DateTime @updatedAt
 
-  @@unique([warehouseId, productId]) // 1 balance row per product per warehouse
+  @@unique([warehouseId, productId])
 }
 
 model StockMovement {
@@ -193,16 +169,12 @@ model StockMovement {
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
 
-  quantity  Int // Positive for stock in, negative for stock out
+  quantity  Int
   type      MovementType
-  reference String? // e.g., "PO-102" or "POS-Invoice-55"
+  reference String?
   notes     String?
   createdAt DateTime     @default(now())
 }
-
-// ==========================================
-// 5. SALES & POINT OF SALE (POS)
-// ==========================================
 
 model SalesOrder {
   id          Int       @id @default(autoincrement())
@@ -233,10 +205,6 @@ model SalesOrderItem {
   unitPrice  Float
   totalPrice Float
 }
-
-// ==========================================
-// 6. PURCHASES (SUPPLIER ORDERS)
-// ==========================================
 
 model PurchaseOrder {
   id          Int       @id @default(autoincrement())
