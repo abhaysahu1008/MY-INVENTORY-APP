@@ -103,7 +103,7 @@ model Product {
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   name        String
-  sku         String   @unique
+  sku         String?  @unique
   barcode     String?  @unique
   description String?
   price       Float

@@ -19,6 +19,9 @@ const Categories = () => {
       setMessage({ text: result.error, isError: true });
     } else if (result?.success) {
       setMessage({ text: result.message || "Category created!", isError: false });
+      setTimeout(() => {
+        setMessage(null);
+      }, 2000);
     }
   }
 

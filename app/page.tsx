@@ -21,7 +21,7 @@ export default async function HomePage() {
 
       {/* Header */}
       <header className="flex justify-between items-center pb-6 border-b border-zinc-800">
-        <span className="font-bold text-lg text-zinc-100">InventoryOS</span>
+        <span className="font-bold italic text-lg text-zinc-100">Ledgr</span>
 
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
@@ -53,7 +53,7 @@ export default async function HomePage() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto my-12 text-center space-y-6">
         <h1 className="text-3xl font-bold text-zinc-100">
-          Inventory OS
+          Ledgr
         </h1>
 
         <p className="text-sm text-zinc-400 max-w-lg mx-auto">
@@ -113,7 +113,7 @@ export default async function HomePage() {
 
       {/* Footer */}
       <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-600">
-        InventoryOS © {new Date().getFullYear()}
+        Ledgr © {new Date().getFullYear()}
       </footer>
 
     </div>

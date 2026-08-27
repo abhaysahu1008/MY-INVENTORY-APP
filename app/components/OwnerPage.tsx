@@ -3,11 +3,10 @@ import React, { Suspense } from "react";
 import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
 import Categories from "./Categories";
-import AddProduct from "./AddProduct";
 
 interface OwnerPageProps {
   companySlug?: string | null;
-  companyId?: number | null; // Updated to allow null/undefined
+  companyId?: number | null;
 }
 
 export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
@@ -49,21 +48,21 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
                   href={`/dashboard/${companySlug}/add-staff?role=MANAGER&companyId=${companyId}`}
                   className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
                 >
-                  👤 Add Manager
+                  Add Manager
                 </Link>
 
                 <Link
                   href={`/dashboard/${companySlug}/add-staff?role=EMPLOYEE&companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-yellow-100 text-yellow-950 font-semibold rounded-xl text-sm border border-yellow-300 transition shadow-sm w-full"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
                 >
-                  👥 Add Employee
+                  Add Employee
                 </Link>
 
                 <Link
                   href={`/dashboard/${companySlug}/add-warehouse?companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-yellow-100 text-yellow-950 font-semibold rounded-xl text-sm border border-yellow-300 transition shadow-sm w-full"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
                 >
-                  🏭 Add Warehouse
+                  Add Warehouse
                 </Link>
               </div>
             ) : (
@@ -76,7 +75,12 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
             )}
           </div>
           <Categories />
-          <AddProduct />
+          <Link
+            href={`/dashboard/${companySlug}/add-product`}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
+          >
+            <span className="text-2xl">+ Add Product</span>
+          </Link>
         </div>
       </div>
 
