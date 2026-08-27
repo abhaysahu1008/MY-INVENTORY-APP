@@ -9,9 +9,10 @@ interface Category {
 
 interface AddProductProps {
   categories: Category[];
+  companySlug: string;
 }
 
-const AddProduct = ({ categories }: AddProductProps) => {
+const AddProduct = ({ categories, companySlug }: AddProductProps,) => {
 
   async function handleProduct(formData: FormData) {
 
@@ -80,6 +81,7 @@ const AddProduct = ({ categories }: AddProductProps) => {
               name="costPrice"
               className="w-full px-3.5 py-2 text-sm bg-slate-900 border border-slate-800 text-slate-100 placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
             />
+            <input type="hidden" name="companySlug" />
           </div>
         </div>
 

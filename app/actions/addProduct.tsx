@@ -50,6 +50,7 @@ export async function AddProductAction(formData: FormData) {
     const sellingPrice = formData.get("sellingPrice") as string; // Standardized to lowercase
     const costPrice = formData.get("costPrice") as string;
     const sku = formData.get("sku") as string;
+    const companySlug = formData.get("companySlug") as string;
 
     if (!name || name.trim() === "") {
       return { error: "Product name is required." };
@@ -82,8 +83,7 @@ export async function AddProductAction(formData: FormData) {
       },
     });
 
-    // 6. Refresh cached Next.js product pages automatically
-    revalidatePath("/products");
+    revalidatePath(`/dashboard/${companySlug}`);
 
     return {
       success: true,
