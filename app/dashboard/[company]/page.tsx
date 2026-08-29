@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import ManagerPage from "../../components/ManagerPage";
 import OwnerPage from "../../components/OwnerPage";
 import { prisma } from "../../lib/prisma";
@@ -26,30 +26,45 @@ export default async function DashboardPage({
   }
 
   let userId: number;
-  let userRole: Role;
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     userId = Number(decoded.id);
-    userRole = decoded.role;
   } catch {
     redirect("/login");
   }
 
+  // Fetch fresh user and company details simultaneously
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { companyId: true },
+    select: {
+      role: true,
+      companyId: true,
+      company: { select: { name: true } } // Assuming Company table has a 'slug' field
+    },
   });
 
+  // Redirect if user no longer exists or lacks a company association
+  if (!user || !user.companyId) {
+    redirect("/login");
+  }
 
-  if (userRole === Role.OWNER) {
+  if (user.company?.name !== company) {
+    notFound();
+  }
+
+  if (user.role === Role.OWNER) {
     return (
       <OwnerPage
         companySlug={company}
-        companyId={user?.companyId}
+        companyId={user.companyId}
       />
     );
   }
 
-  return <ManagerPage companySlug={company} />;
+  if (user.role === Role.MANAGER) {
+    return <ManagerPage companySlug={company} />;
+  }
+
+  redirect(`/dashboard/${company}/pos`);
 }

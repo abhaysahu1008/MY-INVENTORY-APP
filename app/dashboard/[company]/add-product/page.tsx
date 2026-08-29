@@ -1,6 +1,5 @@
 import { prisma } from '../../../lib/prisma';
 import AddProduct from '../../../components/AddProduct';
-import { useSearchParams } from 'next/navigation';
 
 interface PageProps {
   params: Promise<{ company: string }>

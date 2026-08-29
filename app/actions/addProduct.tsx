@@ -5,9 +5,10 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "../lib/prisma";
 import { decodeTokenHelper } from "../utils/helper";
 
+type id = string;
+
 export async function AddProductAction(formData: FormData) {
   try {
-    // 1. Authenticate user session
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
@@ -20,7 +21,6 @@ export async function AddProductAction(formData: FormData) {
       return { error: "Invalid or expired token." };
     }
 
-    // 2. Authorize user and verify company context
     const user = await prisma.user.findUnique({
       where: { id: Number(decodedToken.id) },
       select: {
@@ -42,12 +42,11 @@ export async function AddProductAction(formData: FormData) {
       return { error: "No company associated with this account." };
     }
 
-    // 3. Extract and parse form fields
-    const name = formData.get("name") as string;
-    const categoryName = formData.get("categoryName") as string;
+    const name = formData.get("productName") as string;
+    const categoryId = formData.get("categoryName") as string; // Receiving category ID from select
     const productDesc = formData.get("productDesc") as string;
     const minStock = formData.get("minStock") as string;
-    const sellingPrice = formData.get("sellingPrice") as string; // Standardized to lowercase
+    const sellingPrice = formData.get("SellingPrice") as string; // FIXED: Capital 'S' to match form input
     const costPrice = formData.get("costPrice") as string;
     const sku = formData.get("sku") as string;
     const companySlug = formData.get("companySlug") as string;
@@ -56,20 +55,22 @@ export async function AddProductAction(formData: FormData) {
       return { error: "Product name is required." };
     }
 
-    if (!categoryName || categoryName.trim() === "") {
+    if (!categoryId || categoryId.trim() === "") {
       return { error: "Category selection is required." };
     }
 
-    // 4. Find or resolve category ID
     const category = await prisma.category.findFirst({
-      where: { name: categoryName },
+      where: {
+        id: Number(categoryId),
+        companyId: user.companyId
+      },
     });
 
     if (!category) {
-      return { error: "Selected category does not exist." };
+      return { error: "Selected category does not exist or access is restricted." };
     }
 
-    // 5. Create product with type-casted numerical fields
+    // 4. Create Product
     const newProduct = await prisma.product.create({
       data: {
         companyId: user.companyId,
@@ -88,7 +89,7 @@ export async function AddProductAction(formData: FormData) {
     return {
       success: true,
       message: "Product created successfully!",
-      productId: newProduct.id
+      productId: newProduct.id,
     };
 
   } catch (error) {
