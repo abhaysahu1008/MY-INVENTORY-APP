@@ -1,10 +1,11 @@
 import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { redirect, notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ManagerPage from "../../components/ManagerPage";
 import OwnerPage from "../../components/OwnerPage";
 import { prisma } from "../../lib/prisma";
+import { createSlug } from "../../utils/helper";
 
 interface JwtPayload {
   id: number | string;
@@ -39,15 +40,17 @@ export default async function DashboardPage({
     select: {
       role: true,
       companyId: true,
-      company: { select: { name: true } }
+      company: { select: { name: true } },
     },
   });
 
-  if (!user || !user.companyId) {
+  if (!user || !user.companyId || !user.company?.name) {
     redirect("/login");
   }
 
-  if (user.company?.name !== company) {
+  const companySlug = createSlug(user.company.name);
+
+  if (companySlug !== company) {
     notFound();
   }
 
@@ -64,11 +67,5 @@ export default async function DashboardPage({
     return <ManagerPage companySlug={company} />;
   }
 
-  else {
-    const companySlug = user.company.name.toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
-    redirect(`/dashboard/${companySlug}/pos`);
-  }
+  redirect(`/dashboard/${company}/pos`);
 }

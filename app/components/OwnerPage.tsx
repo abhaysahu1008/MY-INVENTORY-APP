@@ -1,8 +1,7 @@
 import Link from "next/link";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
-import Categories from "./Categories";
 
 interface OwnerPageProps {
   companySlug?: string | null;
@@ -64,6 +63,13 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
                 >
                   Add Warehouse
                 </Link>
+
+                <Link
+                  href={`/dashboard/${companySlug}/add-supplier?companyId=${companyId}`}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
+                >
+                  Add Supplier
+                </Link>
               </div>
             ) : (
               <Link
@@ -74,7 +80,6 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
               </Link>
             )}
           </div>
-          <Categories />
           <Link
             href={`/dashboard/${companySlug}/add-product?companyId=${companyId}`}
             className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
