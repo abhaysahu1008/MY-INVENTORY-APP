@@ -71,7 +71,13 @@ const LoginPage = () => {
         break;
 
       case "EMPLOYEE":
-        router.push("/pos");
+        if (result.user.companySlug) {
+          router.push(`/dashboard/${result.user.companySlug}/pos`);
+        }
+        else {
+          setError("Your account is not assigned to a company. Please contact your manager.");
+          setLoading(false);
+        }
         break;
 
       default:

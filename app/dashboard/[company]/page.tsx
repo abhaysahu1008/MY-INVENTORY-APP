@@ -34,17 +34,15 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  // Fetch fresh user and company details simultaneously
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       role: true,
       companyId: true,
-      company: { select: { name: true } } // Assuming Company table has a 'slug' field
+      company: { select: { name: true } }
     },
   });
 
-  // Redirect if user no longer exists or lacks a company association
   if (!user || !user.companyId) {
     redirect("/login");
   }
@@ -66,5 +64,11 @@ export default async function DashboardPage({
     return <ManagerPage companySlug={company} />;
   }
 
-  redirect(`/dashboard/${company}/pos`);
+  else {
+    const companySlug = user.company.name.toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+    redirect(`/dashboard/${companySlug}/pos`);
+  }
 }

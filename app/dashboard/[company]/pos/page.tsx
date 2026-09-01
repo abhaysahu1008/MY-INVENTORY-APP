@@ -2,7 +2,7 @@ import React from 'react'
 
 const POSPage = () => {
   return (
-    <div></div>
+    <div>POS</div>
   )
 }
 

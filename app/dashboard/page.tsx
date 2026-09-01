@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
+import { createSlug } from "../utils/helper";
 
 export default async function DashboardIndexPage() {
   const cookieStore = await cookies();
@@ -34,10 +35,7 @@ export default async function DashboardIndexPage() {
   }
 
   if (user.company?.id) {
-    const companySlug = user.company.name.toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
+    const companySlug = createSlug(user.company.name);
     redirect(`/dashboard/${companySlug}`);
   }
 
