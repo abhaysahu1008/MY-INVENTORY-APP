@@ -58,6 +58,9 @@ export default async function DashboardLayout({
     if (company && company !== companySlug) {
       redirect(`/dashboard/${companySlug}/pos`);
     }
+
+    // Employees only see the POS page without dashboard layout
+    return children;
   }
 
   return (
