@@ -93,8 +93,7 @@ const LoginPage = () => {
         <div className="space-y-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
             <div className="w-7 h-7 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center">
-              I
-            </div>
+              I            </div>
             <span className="font-bold text-lg text-zinc-100 tracking-tight">InventoryOS</span>
           </div>
           <h1 className="text-2xl font-bold text-zinc-100">Welcome Back</h1>
