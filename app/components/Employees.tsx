@@ -35,13 +35,11 @@ export default async function StaffList({ companyId }: { companyId: number }) {
     );
   }
 
-  // 1. Separate array into Managers and Employees
   const managers = staff.filter((member) => member.role === "MANAGER");
   const employees = staff.filter((member) => member.role === "EMPLOYEE");
 
   return (
     <div className="space-y-8">
-      {/* 2. Managers Section (Always First) */}
       {managers.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-xs font-semibold text-yellow-400 uppercase tracking-wider">
@@ -55,7 +53,6 @@ export default async function StaffList({ companyId }: { companyId: number }) {
         </div>
       )}
 
-      {/* 3. Employees Section (Stacked Below) */}
       {employees.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
@@ -72,7 +69,6 @@ export default async function StaffList({ companyId }: { companyId: number }) {
   );
 }
 
-// Reusable card component to avoid repetitive JSX
 function StaffCard({ member }: { member: StaffMember }) {
   return (
     <div className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center shadow-sm hover:border-zinc-700 transition">

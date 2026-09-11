@@ -28,7 +28,7 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
       <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 md:p-8 shadow-inner">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-          <div>
+          {/* <div>
             <h2 className="text-xl font-bold text-yellow-950">
               {companySlug ? "Staff Management Portal" : "Company Initialization"}
             </h2>
@@ -37,7 +37,7 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
                 ? "Assign new Managers or Employees to this company. Staff accounts will gain scoped access to dashboard features."
                 : "Setup your primary company to activate staff management and dashboard features."}
             </p>
-          </div>
+          </div> */}
 
           <div className="flex-shrink-0">
             {companySlug ? (
@@ -86,12 +86,17 @@ export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
           >
             <span className="text-2xl">+ Add Product</span>
           </Link>
+          <Link
+            href={`/dashboard/${companySlug}/purchase-product?companyId=${companyId}`}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
+          >
+            <span className="text-2xl">Purchase Product</span>
+          </Link>
         </div>
       </div>
 
       <Suspense fallback={<div>Loading Staffs...</div>}>
         {companySlug && companyId && <StaffList companyId={companyId} />}
-
       </Suspense>
       <Suspense fallback={<div>Loading Warehouse...</div>}>
         {companySlug && companyId && <Warehouses companyId={companyId} companySlug={companySlug} />}

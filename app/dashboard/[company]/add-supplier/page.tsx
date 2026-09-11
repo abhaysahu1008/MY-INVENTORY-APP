@@ -5,6 +5,7 @@ import { supplierAction } from "../../../actions/supplierAction";
 
 export default function SupplierPage() {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(null);
 
   async function handleSupplier(formData: FormData) {
     setError(null);

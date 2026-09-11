@@ -70,7 +70,7 @@ export async function createStaff(formData: FormData) {
         password: hashedPassword,
         role: role,
         companyId: user.companyId,
-        ...(warehouseId && { warehouseId }), // Only set if a warehouse was selected
+        ...(warehouseId && { warehouseId }),
       },
     });
 

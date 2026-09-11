@@ -8,7 +8,6 @@ interface ManagerPageProps {
 export default function ManagerPage({ companySlug }: ManagerPageProps) {
   return (
     <div className="p-4 p-6 md:p-10 min-h-screen bg-zinc-950 space-y-10">
-      {/* 1. Header Section */}
       <div className="border-b border-zinc-800 pb-6">
         <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
           Manager Dashboard
@@ -22,11 +21,9 @@ export default function ManagerPage({ companySlug }: ManagerPageProps) {
         </p>
       </div>
 
-      {/* 2. Main Action Panel */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 md:p-8 shadow-inner">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-          {/* Label Section */}
           <div>
             <h2 className="text-xl font-bold text-yellow-950">
               Staff Portal
@@ -36,7 +33,6 @@ export default function ManagerPage({ companySlug }: ManagerPageProps) {
             </p>
           </div>
 
-          {/* Action Section */}
           <div className="flex-shrink-0">
             {companySlug ? (
               <Link

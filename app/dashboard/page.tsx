@@ -33,6 +33,7 @@ export default async function DashboardIndexPage() {
   if (!user) {
     redirect("/login");
   }
+  console.log(user);
 
   if (user.company?.id) {
     const companySlug = createSlug(user.company.name);
