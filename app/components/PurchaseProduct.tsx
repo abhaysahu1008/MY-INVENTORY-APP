@@ -66,6 +66,7 @@ const PurchaseProductFromSupplier = ({
     const updated = [...items];
     updated[index] = { ...updated[index], [field]: value };
 
+    // Auto-fill cost when selected product changes
     if (field === "productId") {
       const selectedProduct = products.find((p) => p.id === value);
       if (selectedProduct) {
