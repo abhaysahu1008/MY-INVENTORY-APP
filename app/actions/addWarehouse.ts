@@ -48,7 +48,7 @@ export async function addWarehouseAction(formData: FormData) {
       return { error: "Warehouse name is required!" };
     }
 
-    await prisma.warehouse.create({
+    const warehouse = await prisma.warehouse.create({
       data: {
         companyId,
         name,
@@ -59,9 +59,12 @@ export async function addWarehouseAction(formData: FormData) {
 
     await prisma.user.update({
       where: {
-
-      }
-    })
+        id: user.id, // Target the user by their unique primary key
+      },
+      data: {
+        warehouseId: warehouse.id, // Set their warehouseId to the new warehouse
+      },
+    });
 
     revalidatePath("/dashboard");
 
