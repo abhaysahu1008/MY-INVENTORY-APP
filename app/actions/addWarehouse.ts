@@ -59,10 +59,10 @@ export async function addWarehouseAction(formData: FormData) {
 
     await prisma.user.update({
       where: {
-        id: user.id, // Target the user by their unique primary key
+        id: user.id,
       },
       data: {
-        warehouseId: warehouse.id, // Set their warehouseId to the new warehouse
+        warehouseId: warehouse.id,
       },
     });
 

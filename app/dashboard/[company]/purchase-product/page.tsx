@@ -2,49 +2,42 @@ import PurchaseProductFromSupplier from "../../../components/PurchaseProduct";
 import { prisma } from "../../../lib/prisma";
 
 interface PageProps {
-  params: Promise<{
-    company: string;
-  }>;
-  searchParams: Promise<{
-    companyId?: string;
-  }>
+  searchParams: Promise<{ companyId?: string }>;
 }
 
-const PurchaseProduct = async ({ searchParams, params }: PageProps) => {
-  const { company } = await params;
-  const { companyId: companyIdStr } = await searchParams;
+export default async function PurchaseProductPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const companyId = Number(params.companyId) || 3;
 
-  const companyId = companyIdStr ? Number(companyIdStr) : undefined;
+  const authorizedUser = await prisma.user.findFirst({
+    where: {
+      companyId,
+      role: {
+        in: ["OWNER", "MANAGER"],
+      }
+    },
+    select: { id: true },
+  });
 
-  if (!companyId) {
-    return <div className="p-6 text-red-500">Missing or invalid Company ID.</div>;
-  }
+  const activeUserId = authorizedUser?.id || 1;
 
   const [warehouses, suppliers, products] = await Promise.all([
-    prisma.warehouse.findMany({
-      where: { companyId },
-      select: { id: true, name: true },
-    }),
-    prisma.supplier.findMany({
-      where: { companyId },
-      select: { id: true, name: true },
-    }),
-    prisma.product.findMany({
-      where: { companyId },
-      select: { id: true, name: true, price: true },
-    }),
+    prisma.warehouse.findMany({ where: { companyId }, select: { id: true, name: true } }),
+    prisma.supplier.findMany({ where: { companyId }, select: { id: true, name: true } }),
+    prisma.product.findMany({ where: { companyId }, select: { id: true, name: true, costPrice: true } }),
   ]);
 
   return (
-    <div className="p-6">
-      <PurchaseProductFromSupplier
-        companyId={companyId}
-        warehouses={warehouses}
-        suppliers={suppliers}
-        products={products}
-      />
-    </div>
+    <PurchaseProductFromSupplier
+      companyId={companyId}
+      userId={activeUserId}
+      warehouses={warehouses}
+      suppliers={suppliers}
+      products={products.map((p) => ({
+        id: p.id,
+        name: p.name,
+        price: p.costPrice,
+      }))}
+    />
   );
-};
-
-export default PurchaseProduct;
+}
