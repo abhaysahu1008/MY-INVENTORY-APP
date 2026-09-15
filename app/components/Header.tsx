@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { LogoutUser } from "../actions/auth";
+import { logoutUser } from "../actions/auth";
 
 export default function Header() {
   return (
@@ -14,7 +14,7 @@ export default function Header() {
         </span>
       </Link>
 
-      <form action={LogoutUser}>
+      <form action={logoutUser}>
         <button
           type="submit"
           className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-yellow-200 border border-zinc-800 font-medium rounded-xl text-xs sm:text-sm transition shadow-sm"
