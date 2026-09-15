@@ -1,27 +1,41 @@
-import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
-export function createSlug(text: string) {
+
+export type UserRole = "OWNER" | "MANAGER" | "EMPLOYEE";
+
+export interface TokenPayload {
+  id: number;
+  role: UserRole;
+  iat?: number;
+  exp?: number;
+}
+
+export function createSlug(text: string): string {
+  if (!text) return "";
+
   return text
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, "") // Remove special characters
-    .replace(/[\s_-]+/g, "-")  // Replace spaces with hyphens
+    .replace(/[\s_-]+/g, "-")  // Replace spaces/underscores with hyphens
     .replace(/^-+|-+$/g, "");  // Trim hyphens from start/end
 }
 
-export interface tokenPayload {
-  id: number;
-  role: Role;
-}
-
-export function decodeTokenHelper(token: string): tokenPayload | null {
+export function decodeTokenHelper(token: string): TokenPayload | null {
   try {
     const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error("JWT_SECRET is missing");
+    if (!secret) {
+      console.error("JWT_SECRET is missing from environment variables.");
+      return null;
+    }
 
-    const decoded = jwt.verify(token, secret) as tokenPayload;
-    return decoded;
+    const decoded = jwt.verify(token, secret) as TokenPayload;
+
+    // Ensure id is converted to number if encoded as string
+    return {
+      ...decoded,
+      id: Number(decoded.id),
+    };
   } catch (error) {
     console.error("JWT Verification Error:", error);
     return null;

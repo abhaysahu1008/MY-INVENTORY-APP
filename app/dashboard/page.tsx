@@ -17,6 +17,7 @@ export default async function DashboardPage({
   params: Promise<{ company: string }>;
 }) {
   const { company } = await params;
+  const decodedCompanyParam = decodeURIComponent(company);
 
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -44,20 +45,21 @@ export default async function DashboardPage({
     redirect("/add-company");
   }
 
-  const companySlug = createSlug(user.company.name);
+  const targetSlug = createSlug(user.company.name.trim());
 
-  // Prevent users from accessing other company slugs via URL manipulation
-  if (companySlug !== company) {
-    notFound();
+  // FIX: Redirect to correct canonical slug instead of hard 404 if slug mismatch is minor
+  if (targetSlug !== decodedCompanyParam) {
+    // If you prefer strict authorization, keep notFound() here after verifying your createSlug implementation.
+    redirect(`/dashboard/${targetSlug}`);
   }
 
   if (user.role === Role.OWNER) {
-    return <OwnerPage companySlug={company} companyId={user.companyId} />;
+    return <OwnerPage companySlug={targetSlug} companyId={user.companyId} />;
   }
 
   if (user.role === Role.MANAGER) {
-    return <ManagerPage companySlug={company} />;
+    return <ManagerPage companySlug={targetSlug} />;
   }
 
-  redirect(`/dashboard/${company}/pos`);
+  redirect(`/dashboard/${targetSlug}/pos`);
 }
