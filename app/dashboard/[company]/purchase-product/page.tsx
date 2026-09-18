@@ -1,36 +1,75 @@
+import { cookies } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import PurchaseProductFromSupplier from "../../../components/PurchaseProduct";
 import { prisma } from "../../../lib/prisma";
+import { decodeTokenHelper } from "../../../utils/helper";
 
 interface PageProps {
   searchParams: Promise<{ companyId?: string }>;
 }
 
 export default async function PurchaseProductPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const companyId = Number(params.companyId) || 3;
+  // 1. Authenticate user from JWT cookie
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  const authorizedUser = await prisma.user.findFirst({
-    where: {
-      companyId,
-      role: {
-        in: ["OWNER", "MANAGER"],
-      }
+  if (!token) {
+    redirect("/login");
+  }
+
+  const payload = decodeTokenHelper(token);
+  if (!payload?.id) {
+    redirect("/login");
+  }
+
+  // 2. Fetch active logged-in user and their company association
+  const currentUser = await prisma.user.findUnique({
+    where: { id: payload.id },
+    select: {
+      id: true,
+      role: true,
+      companyId: true,
     },
-    select: { id: true },
   });
 
-  const activeUserId = authorizedUser?.id || 1;
+  if (!currentUser || !currentUser.companyId) {
+    redirect("/add-company");
+  }
 
+  // 3. Resolve target companyId (URL param overrides default if user is authorized)
+  const resolvedParams = await searchParams;
+  const parsedParamId = resolvedParams.companyId ? Number(resolvedParams.companyId) : null;
+
+  // Use URL companyId if valid, otherwise fallback to user's assigned companyId
+  const targetCompanyId = (parsedParamId && !isNaN(parsedParamId))
+    ? parsedParamId
+    : currentUser.companyId;
+
+  // Multi-tenant check: Prevent non-owners from accessing unauthorized company IDs
+  if (currentUser.role !== "OWNER" && targetCompanyId !== currentUser.companyId) {
+    notFound();
+  }
+
+  // 4. Fetch relational data concurrently for the target company
   const [warehouses, suppliers, products] = await Promise.all([
-    prisma.warehouse.findMany({ where: { companyId }, select: { id: true, name: true } }),
-    prisma.supplier.findMany({ where: { companyId }, select: { id: true, name: true } }),
-    prisma.product.findMany({ where: { companyId }, select: { id: true, name: true, costPrice: true } }),
+    prisma.warehouse.findMany({
+      where: { companyId: targetCompanyId },
+      select: { id: true, name: true },
+    }),
+    prisma.supplier.findMany({
+      where: { companyId: targetCompanyId },
+      select: { id: true, name: true },
+    }),
+    prisma.product.findMany({
+      where: { companyId: targetCompanyId },
+      select: { id: true, name: true, costPrice: true },
+    }),
   ]);
 
   return (
     <PurchaseProductFromSupplier
-      companyId={companyId}
-      userId={activeUserId}
+      companyId={targetCompanyId}
+      userId={currentUser.id}
       warehouses={warehouses}
       suppliers={suppliers}
       products={products.map((p) => ({

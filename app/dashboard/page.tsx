@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import ManagerPage from "../components/ManagerPage";
 import OwnerPage from "../components/OwnerPage";
 import { prisma } from "../lib/prisma";
@@ -47,9 +47,8 @@ export default async function DashboardPage({
 
   const targetSlug = createSlug(user.company.name.trim());
 
-  // FIX: Redirect to correct canonical slug instead of hard 404 if slug mismatch is minor
   if (targetSlug !== decodedCompanyParam) {
-    // If you prefer strict authorization, keep notFound() here after verifying your createSlug implementation.
+
     redirect(`/dashboard/${targetSlug}`);
   }
 

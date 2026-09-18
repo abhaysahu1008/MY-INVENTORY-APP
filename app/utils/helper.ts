@@ -16,9 +16,9 @@ export function createSlug(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "") // Remove special characters
-    .replace(/[\s_-]+/g, "-")  // Replace spaces/underscores with hyphens
-    .replace(/^-+|-+$/g, "");  // Trim hyphens from start/end
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 export function decodeTokenHelper(token: string): TokenPayload | null {
@@ -31,7 +31,6 @@ export function decodeTokenHelper(token: string): TokenPayload | null {
 
     const decoded = jwt.verify(token, secret) as TokenPayload;
 
-    // Ensure id is converted to number if encoded as string
     return {
       ...decoded,
       id: Number(decoded.id),
