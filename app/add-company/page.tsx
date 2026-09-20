@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createCompany } from "../actions/addCompany";
+import { useState } from "react";
+import { createCompany } from "../../actions/addCompany";
 import { createSlug } from "../utils/helper";
 
 export default function AddCompanyForm() {

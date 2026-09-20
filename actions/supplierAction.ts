@@ -2,9 +2,9 @@
 
 import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { prisma } from "../lib/prisma";
+import { cookies } from "next/headers";
+import { prisma } from "../app/lib/prisma";
 
 interface JwtPayload {
   id: number;

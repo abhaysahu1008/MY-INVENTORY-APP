@@ -2,10 +2,11 @@ import { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ManagerPage from "../components/ManagerPage";
-import OwnerPage from "../components/OwnerPage";
+;
 import { prisma } from "../lib/prisma";
 import { createSlug } from "../utils/helper";
+import OwnerPage from "../../components/OwnerPage";
+import ManagerPage from "../../components/ManagerPage";
 
 interface JwtPayload {
   id: number | string;

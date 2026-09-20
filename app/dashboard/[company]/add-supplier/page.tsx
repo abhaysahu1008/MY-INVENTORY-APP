@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { supplierAction } from "../../../actions/supplierAction";
+import { useState } from "react";
+import { supplierAction } from "../../../../actions/supplierAction";
 
 export default function SupplierPage() {
   const [error, setError] = useState<string | null>(null);

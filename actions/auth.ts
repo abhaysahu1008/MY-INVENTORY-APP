@@ -4,8 +4,8 @@ import bcrypt, { hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "../lib/prisma";
-import { createSlug } from "../utils/helper";
+import { prisma } from "../app/lib/prisma";
+import { createSlug } from "../app/utils/helper";
 
 // Helper to ensure JWT_SECRET is present
 function getJwtSecret() {

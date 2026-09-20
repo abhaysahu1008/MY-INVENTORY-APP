@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from '../lib/prisma';
+import { prisma } from '../app/lib/prisma';
 
 interface WarehousesProps {
   companyId: number;

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { addWarehouseAction } from "../../../actions/addWarehouse";
+import { useState } from "react";
+import { addWarehouseAction } from "../../../../actions/addWarehouse";
 
 export default function AddWarehouse() {
   const searchParams = useSearchParams();

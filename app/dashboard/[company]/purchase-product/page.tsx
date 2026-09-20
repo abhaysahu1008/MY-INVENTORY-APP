@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import PurchaseProductFromSupplier from "../../../components/PurchaseProduct";
 import { prisma } from "../../../lib/prisma";
 import { decodeTokenHelper } from "../../../utils/helper";
+import PurchaseProductFromSupplier from "../../../../components/PurchaseProduct";
 
 interface PageProps {
   searchParams: Promise<{ companyId?: string }>;

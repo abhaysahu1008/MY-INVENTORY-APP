@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { registerUser } from '../../actions/auth';
+import { registerUser } from '../../../actions/auth';
 
 const RegisterPage = () => {
   const router = useRouter();

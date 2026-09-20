@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createSalesOrder } from "@/actions/sales";
+import { createSalesOrder } from "../../../../actions/createSalesOrder";
 
 interface ProductOption {
   id: number;

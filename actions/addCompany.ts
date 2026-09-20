@@ -1,8 +1,8 @@
 "use server";
 
-import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { prisma } from "../lib/prisma";
+import { cookies } from "next/headers";
+import { prisma } from "../app/lib/prisma";
 
 interface JWTPayload {
   id: number;

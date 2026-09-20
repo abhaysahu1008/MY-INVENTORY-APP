@@ -4,7 +4,7 @@ import { Role } from "@prisma/client";
 import { hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../app/lib/prisma";
 
 export async function getWarehouses(companyIdStr: string) {
   try {

@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link';
 import { useState } from 'react';
-import { loginUser } from '../../actions/auth';
+import { loginUser } from '../../../actions/auth';
 
 const LoginPage = () => {
   const [error, setError] = useState("");

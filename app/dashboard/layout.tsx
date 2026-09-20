@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+
 import { prisma } from "../lib/prisma";
 import { createSlug } from "../utils/helper";
+import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
 
 interface JWTPayload {
   id: number;

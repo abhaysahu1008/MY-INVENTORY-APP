@@ -1,9 +1,9 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { prisma } from "../lib/prisma";
-import { decodeTokenHelper } from "../utils/helper";
+import { cookies } from "next/headers";
+import { prisma } from "../app/lib/prisma";
+import { decodeTokenHelper } from "../app/utils/helper";
 
 export async function addWarehouseAction(formData: FormData) {
   try {

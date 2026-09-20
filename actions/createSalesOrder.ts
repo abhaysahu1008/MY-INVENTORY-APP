@@ -1,8 +1,8 @@
 "use server";
 
-import { MovementType, OrderStatus } from "../generated/prisma/enums";
-import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
+import { MovementType, OrderStatus } from "../app/generated/prisma/enums";
+import { prisma } from "../app/lib/prisma";
 
 export interface CreateSalesOrderInput {
   companyId: number;

@@ -2,7 +2,7 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createStaff, getWarehouses } from "../../../actions/addStaff";
+import { createStaff, getWarehouses } from "../../../../actions/addStaff";
 
 interface Warehouse {
   id: number;

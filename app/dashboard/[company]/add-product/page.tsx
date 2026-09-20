@@ -1,5 +1,5 @@
+import AddProduct from '../../../../components/AddProduct';
 import { prisma } from '../../../lib/prisma';
-import AddProduct from '../../../components/AddProduct';
 
 interface PageProps {
   params: Promise<{ company: string }>
