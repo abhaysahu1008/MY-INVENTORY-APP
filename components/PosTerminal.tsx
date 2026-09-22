@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { createSalesOrder } from "@/actions/createSalesOrder";
+import ReceiptModal from "@/components/ReceiptModal"; // 1. Import Modal
 
 interface ProductOption {
   id: number;
@@ -43,13 +44,13 @@ export default function PosTerminal({
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | "">("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [completedOrder, setCompletedOrder] = useState<any | null>(null); // 2. State for receipt modal
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     setProductList(products);
   }, [products]);
 
-  // Add Product to Cart
   const handleAddToCart = (productId: number) => {
     const product = productList.find((p) => p.id === productId);
     if (!product) return;
@@ -86,7 +87,6 @@ export default function PosTerminal({
     setErrorMsg(null);
   };
 
-  // Update Cart Quantity
   const handleQuantityChange = (productId: number, qty: number) => {
     setCart((prevCart) =>
       prevCart
@@ -101,10 +101,8 @@ export default function PosTerminal({
     );
   };
 
-  // Total Calculation
   const totalAmount = cart.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0);
 
-  // Submit Sale Order
   const handleSubmitOrder = () => {
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -115,23 +113,43 @@ export default function PosTerminal({
     }
 
     startTransition(async () => {
+      const orderItems = cart.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.quantity * item.unitPrice,
+      }));
+
       const payload = {
         companyId,
         warehouseId,
         userId,
         customerId: selectedCustomerId ? Number(selectedCustomerId) : undefined,
         totalAmount,
-        items: cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          totalPrice: item.quantity * item.unitPrice,
-        })),
+        items: orderItems,
       };
 
       const res = await createSalesOrder(payload);
 
       if (res.success) {
+        const matchedCustomer = customers.find((c) => c.id === Number(selectedCustomerId));
+
+        // 3. Construct receipt object to display in ReceiptModal
+        setCompletedOrder({
+          id: res.orderId,
+          createdAt: new Date(),
+          totalAmount,
+          customer: matchedCustomer ? { name: matchedCustomer.name } : null,
+          user: null,
+          items: cart.map((item, idx) => ({
+            id: idx + 1,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.quantity * item.unitPrice,
+            product: { name: item.name },
+          })),
+        });
+
         setProductList((prevProducts) =>
           prevProducts.map((p) => {
             const cartItem = cart.find((c) => c.productId === p.id);
@@ -152,12 +170,12 @@ export default function PosTerminal({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 text-gray-100">
-      {/* LEFT: Product Catalog */}
+      {/* Product Catalog */}
       <div className="md:col-span-2 space-y-4">
         <h2 className="text-xl font-bold text-white">Select Products</h2>
         {productList.length === 0 ? (
           <div className="p-8 text-center bg-gray-800 border border-gray-700 rounded-lg text-gray-400">
-            No products found. Add products to your company catalog first.
+            No products available.
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -173,21 +191,18 @@ export default function PosTerminal({
               >
                 <div className="font-semibold text-lg">{p.name}</div>
                 <div className="text-gray-300">${p.price.toFixed(2)}</div>
-                <div className="text-xs text-gray-400 mt-2">
-                  Stock: {p.currentStock}
-                </div>
+                <div className="text-xs text-gray-400 mt-2">Stock: {p.currentStock}</div>
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* RIGHT: Cart & Checkout */}
+      {/* Cart & Checkout */}
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-sm flex flex-col justify-between">
         <div>
           <h2 className="text-xl font-bold mb-4 text-white">Current Order</h2>
 
-          {/* Customer Selection */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1 text-gray-300">
               Customer (Optional)
@@ -208,7 +223,6 @@ export default function PosTerminal({
             </select>
           </div>
 
-          {/* Messages */}
           {errorMsg && (
             <div className="mb-4 p-3 bg-red-900/50 border border-red-500 text-red-200 text-sm rounded">
               {errorMsg}
@@ -220,7 +234,6 @@ export default function PosTerminal({
             </div>
           )}
 
-          {/* Cart Items List */}
           <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
             {cart.length === 0 ? (
               <p className="text-sm text-gray-400 py-4 text-center">Cart is empty</p>
@@ -260,7 +273,6 @@ export default function PosTerminal({
           </div>
         </div>
 
-        {/* Footer: Totals & Submit */}
         <div className="border-t border-gray-700 pt-4 mt-6">
           <div className="flex justify-between font-bold text-lg mb-4 text-white">
             <span>Total:</span>
@@ -275,6 +287,12 @@ export default function PosTerminal({
           </button>
         </div>
       </div>
+
+      {/* 4. Render Receipt Modal when an order is completed */}
+      <ReceiptModal
+        order={completedOrder}
+        onClose={() => setCompletedOrder(null)}
+      />
     </div>
   );
 }

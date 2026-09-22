@@ -9,6 +9,8 @@ export default async function PosPage({
 }: {
   params: Promise<{ company: string }>;
 }) {
+
+  const { company } = await params;
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   if (!token) redirect("/login");
