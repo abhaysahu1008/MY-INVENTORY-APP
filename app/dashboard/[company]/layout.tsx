@@ -12,10 +12,8 @@ export default async function CompanyLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-950 text-gray-100">
-      {/* Sidebar gets the company slug directly */}
       <Sidebar companySlug={company} />
 
-      {/* Page content */}
       <main className="flex-1 overflow-y-auto">
         {children}
       </main>

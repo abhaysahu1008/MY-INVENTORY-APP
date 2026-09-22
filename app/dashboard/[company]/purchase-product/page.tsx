@@ -9,48 +9,31 @@ interface PageProps {
 }
 
 export default async function PurchaseProductPage({ searchParams }: PageProps) {
-  // 1. Authenticate user from JWT cookie
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  if (!token) {
-    redirect("/login");
-  }
+  if (!token) redirect("/login");
 
   const payload = decodeTokenHelper(token);
-  if (!payload?.id) {
-    redirect("/login");
-  }
+  if (!payload?.id) redirect("/login");
 
-  // 2. Fetch active logged-in user and their company association
   const currentUser = await prisma.user.findUnique({
     where: { id: payload.id },
-    select: {
-      id: true,
-      role: true,
-      companyId: true,
-    },
+    select: { id: true, role: true, companyId: true },
   });
 
-  if (!currentUser || !currentUser.companyId) {
-    redirect("/add-company");
-  }
+  if (!currentUser || !currentUser.companyId) redirect("/add-company");
 
-  // 3. Resolve target companyId (URL param overrides default if user is authorized)
   const resolvedParams = await searchParams;
   const parsedParamId = resolvedParams.companyId ? Number(resolvedParams.companyId) : null;
 
-  // Use URL companyId if valid, otherwise fallback to user's assigned companyId
-  const targetCompanyId = (parsedParamId && !isNaN(parsedParamId))
-    ? parsedParamId
-    : currentUser.companyId;
+  const targetCompanyId =
+    parsedParamId && !isNaN(parsedParamId) ? parsedParamId : currentUser.companyId;
 
-  // Multi-tenant check: Prevent non-owners from accessing unauthorized company IDs
   if (currentUser.role !== "OWNER" && targetCompanyId !== currentUser.companyId) {
     notFound();
   }
 
-  // 4. Fetch relational data concurrently for the target company
   const [warehouses, suppliers, products] = await Promise.all([
     prisma.warehouse.findMany({
       where: { companyId: targetCompanyId },
@@ -67,16 +50,18 @@ export default async function PurchaseProductPage({ searchParams }: PageProps) {
   ]);
 
   return (
-    <PurchaseProductFromSupplier
-      companyId={targetCompanyId}
-      userId={currentUser.id}
-      warehouses={warehouses}
-      suppliers={suppliers}
-      products={products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        price: p.costPrice,
-      }))}
-    />
+    <div className="min-h-screen bg-zinc-950 p-6">
+      <PurchaseProductFromSupplier
+        companyId={targetCompanyId}
+        userId={currentUser.id}
+        warehouses={warehouses}
+        suppliers={suppliers}
+        products={products.map((p) => ({
+          id: p.id,
+          name: p.name,
+          price: p.costPrice,
+        }))}
+      />
+    </div>
   );
 }

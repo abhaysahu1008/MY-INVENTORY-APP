@@ -21,8 +21,10 @@ const AddProductPage = async ({ params, searchParams }: PageProps) => {
   });
 
   return (
-    <div>
-      <AddProduct categories={categories} companySlug={company} />
+    <div className="min-h-screen bg-black flex items-start justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <AddProduct categories={categories} companySlug={company} />
+      </div>
     </div>
   );
 };

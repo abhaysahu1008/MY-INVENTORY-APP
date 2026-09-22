@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { registerUser } from '../../../actions/auth';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { registerUser } from "../../../actions/auth";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -14,9 +14,9 @@ const RegisterPage = () => {
     setLoading(true);
     setError("");
 
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     if (!name || !email || !password) {
       setError("All fields are required");
@@ -55,7 +55,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const commonPasswords = ['password', '12345678', 'qwerty123', 'admin123'];
+    const commonPasswords = ["password", "12345678", "qwerty123", "admin123"];
     if (commonPasswords.includes(password.toLowerCase())) {
       setError("Password is too common. Please choose a stronger password");
       setLoading(false);
@@ -70,29 +70,32 @@ const RegisterPage = () => {
       return;
     }
 
-    router.push('/dashboard/owner');
+    router.push("/dashboard/owner");
   }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-
-        {/* Header */}
         <div className="space-y-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-            <div className="w-7 h-7 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center">
-              I
+            <div className="w-8 h-8 bg-yellow-400 text-zinc-950 font-black text-sm rounded-lg flex items-center justify-center italic">
+              L
             </div>
-            <span className="font-bold text-lg text-zinc-100 tracking-tight">InventoryOS</span>
+            <span className="font-bold text-lg text-zinc-100 tracking-tight italic">
+              Ledgr
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-zinc-100">Create Account</h1>
-          <p className="text-xs text-zinc-400">Register as a business owner to start managing your organization.</p>
+          <p className="text-xs text-zinc-400">
+            Register as a business owner to start managing your organization.
+          </p>
         </div>
 
-        {/* Form */}
         <form action={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1">Full Name</label>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">
+              Full Name
+            </label>
             <input
               type="text"
               name="name"
@@ -103,7 +106,9 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">
+              Email Address
+            </label>
             <input
               type="email"
               name="email"
@@ -114,7 +119,9 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1">Password</label>
+            <label className="block text-xs font-semibold text-zinc-300 mb-1">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -135,20 +142,18 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-semibold rounded-xl py-3 text-sm transition shadow-md"
+            className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-semibold rounded-xl py-3 text-sm transition shadow-md active:scale-[0.99]"
           >
-            {loading ? 'Creating Account...' : 'Register'}
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
 
-        {/* Footer */}
         <p className="text-center text-xs text-zinc-400">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="text-yellow-400 font-semibold hover:underline">
             Login
           </Link>
         </p>
-
       </div>
     </div>
   );

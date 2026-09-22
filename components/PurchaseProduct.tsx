@@ -61,11 +61,7 @@ const PurchaseProductFromSupplier = ({
     setItems(items.filter((_, i) => i !== index));
   };
 
-  const handleItemChange = (
-    index: number,
-    field: keyof LineItem,
-    value: number
-  ) => {
+  const handleItemChange = (index: number, field: keyof LineItem, value: number) => {
     const updated = [...items];
     updated[index] = { ...updated[index], [field]: value };
 
@@ -79,20 +75,16 @@ const PurchaseProductFromSupplier = ({
     setItems(updated);
   };
 
-  const grandTotal = items.reduce(
-    (sum, item) => sum + item.quantity * item.unitCost,
-    0
-  );
+  const grandTotal = items.reduce((sum, item) => sum + item.quantity * item.unitCost, 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const activeCompanyId = Number(companyId);
-    const activeUserId = Number(userId) || 1; // Fallback to ID 1 if undefined/NaN
+    const activeUserId = Number(userId) || 1;
     const activeSupplierId = Number(supplierId);
     const activeWarehouseId = Number(warehouseId);
 
-    // Validation Guard: Ensure no NaN values are passed to Prisma
     if (!activeSupplierId || !activeWarehouseId) {
       alert("Please select both a supplier and a warehouse.");
       return;
@@ -128,24 +120,32 @@ const PurchaseProductFromSupplier = ({
       alert(`Transaction Error:\n${res.error}`);
     }
   };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md text-gray-800">
-      <h1 className="text-2xl font-bold mb-6">Create Purchase Order</h1>
+    <div className="w-full max-w-4xl mx-auto p-6 sm:p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl text-gray-100 space-y-6">
+      <div className="border-b border-zinc-800 pb-4">
+        <h1 className="text-2xl font-bold text-white">Create Purchase Order</h1>
+        <p className="text-xs text-zinc-400 mt-1">
+          Order stock from a supplier and route it to a warehouse.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Order Details Header */}
-        <div className="bg-gray-50 border p-4 rounded-md space-y-4">
-          <h2 className="text-lg font-semibold border-b pb-2">Order Details</h2>
+        {/* Order Details */}
+        <div className="bg-zinc-950/50 border border-zinc-800 p-5 rounded-2xl space-y-4">
+          <h2 className="text-base font-semibold border-b border-zinc-800 pb-2 text-white">
+            Order Details
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="supplier" className="block text-sm font-medium mb-1">
+              <label htmlFor="supplier" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
                 Supplier
               </label>
               <select
                 id="supplier"
                 value={supplierId}
                 onChange={(e) => setSupplierId(Number(e.target.value))}
-                className="w-full p-2 border rounded-md bg-white"
+                className="w-full p-2.5 border border-zinc-800 rounded-xl bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:border-blue-500 transition"
                 required
               >
                 <option value="">Select a Supplier</option>
@@ -158,14 +158,14 @@ const PurchaseProductFromSupplier = ({
             </div>
 
             <div>
-              <label htmlFor="warehouse" className="block text-sm font-medium mb-1">
+              <label htmlFor="warehouse" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
                 Destination Warehouse
               </label>
               <select
                 id="warehouse"
                 value={warehouseId}
                 onChange={(e) => setWarehouseId(Number(e.target.value))}
-                className="w-full p-2 border rounded-md bg-white"
+                className="w-full p-2.5 border border-zinc-800 rounded-xl bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:border-blue-500 transition"
                 required
               >
                 <option value="">Select a Warehouse</option>
@@ -179,9 +179,11 @@ const PurchaseProductFromSupplier = ({
           </div>
         </div>
 
-        {/* Dynamic Items List */}
-        <div className="bg-gray-50 border p-4 rounded-md space-y-4">
-          <h2 className="text-lg font-semibold border-b pb-2">Order Items</h2>
+        {/* Line Items */}
+        <div className="bg-zinc-950/50 border border-zinc-800 p-5 rounded-2xl space-y-4">
+          <h2 className="text-base font-semibold border-b border-zinc-800 pb-2 text-white">
+            Order Items
+          </h2>
 
           {items.map((item, index) => {
             const lineTotal = item.quantity * item.unitCost;
@@ -189,10 +191,10 @@ const PurchaseProductFromSupplier = ({
             return (
               <div
                 key={index}
-                className="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 border rounded-md"
+                className="flex flex-wrap md:flex-nowrap items-end gap-3 bg-zinc-900 p-3 border border-zinc-800 rounded-xl"
               >
                 <div className="flex-1 min-w-[200px]">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
                     Product
                   </label>
                   <select
@@ -200,7 +202,7 @@ const PurchaseProductFromSupplier = ({
                     onChange={(e) =>
                       handleItemChange(index, "productId", Number(e.target.value))
                     }
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2.5 border border-zinc-800 rounded-xl bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:border-blue-500 transition"
                   >
                     {products.map((product) => (
                       <option key={product.id} value={product.id}>
@@ -211,8 +213,8 @@ const PurchaseProductFromSupplier = ({
                 </div>
 
                 <div className="w-24">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
-                    Quantity
+                  <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
+                    Qty
                   </label>
                   <input
                     type="number"
@@ -221,12 +223,12 @@ const PurchaseProductFromSupplier = ({
                     onChange={(e) =>
                       handleItemChange(index, "quantity", Number(e.target.value))
                     }
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2.5 border border-zinc-800 rounded-xl bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:border-blue-500 transition"
                   />
                 </div>
 
                 <div className="w-32">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
                     Unit Cost ($)
                   </label>
                   <input
@@ -234,17 +236,13 @@ const PurchaseProductFromSupplier = ({
                     step="0.01"
                     value={item.unitCost}
                     onChange={(e) =>
-                      handleItemChange(
-                        index,
-                        "unitCost",
-                        parseFloat(e.target.value) || 0
-                      )
+                      handleItemChange(index, "unitCost", parseFloat(e.target.value) || 0)
                     }
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2.5 border border-zinc-800 rounded-xl bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:border-blue-500 transition"
                   />
                 </div>
 
-                <div className="w-28 text-right font-semibold pt-4">
+                <div className="w-24 text-right font-semibold text-sm text-white pb-2.5">
                   ${lineTotal.toFixed(2)}
                 </div>
 
@@ -252,7 +250,8 @@ const PurchaseProductFromSupplier = ({
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(index)}
-                    className="text-red-500 font-bold hover:text-red-700 pt-4 px-2"
+                    className="text-red-400 font-bold hover:text-red-300 pb-2.5 px-2 transition"
+                    aria-label="Remove item"
                   >
                     ✕
                   </button>
@@ -264,23 +263,22 @@ const PurchaseProductFromSupplier = ({
           <button
             type="button"
             onClick={handleAddItem}
-            className="text-blue-600 text-sm font-medium hover:underline pt-2 inline-block"
+            className="text-blue-400 text-sm font-medium hover:text-blue-300 hover:underline pt-2 inline-block transition"
           >
             + Add Another Product
           </button>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center pt-4 border-t">
-          <div className="text-xl font-bold">
-            Total Amount:{" "}
-            <span className="text-green-600">${grandTotal.toFixed(2)}</span>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-zinc-800">
+          <div className="text-lg font-bold text-white">
+            Total Amount: <span className="text-emerald-400">${grandTotal.toFixed(2)}</span>
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-500 disabled:opacity-50 transition shadow-md active:scale-[0.99]"
           >
             {isSubmitting ? "Processing..." : "Submit Purchase Order"}
           </button>

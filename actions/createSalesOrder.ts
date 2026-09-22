@@ -94,7 +94,6 @@ export async function createSalesOrder(payload: CreateSalesOrderInput) {
       { maxWait: 10000, timeout: 20000 }
     );
 
-    // --- UPDATED REVALIDATIONS ---
     revalidatePath("/dashboard/[company]/pos", "page");
     revalidatePath("/dashboard/[company]/inventory", "page");
     revalidatePath("/dashboard/[company]/sales", "page");

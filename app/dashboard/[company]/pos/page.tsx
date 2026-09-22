@@ -9,7 +9,6 @@ export default async function PosPage({
 }: {
   params: Promise<{ company: string }>;
 }) {
-
   const { company } = await params;
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -37,18 +36,24 @@ export default async function PosPage({
 
   if (!targetWarehouseId) {
     return (
-      <div className="p-6 text-white">
-        Please create a warehouse first before using the POS.
+      <div className="h-screen w-full flex items-center justify-center bg-gray-950 text-white p-6">
+        <div className="bg-gray-900 border border-gray-800 p-8 rounded-2xl max-w-md text-center">
+          <div className="text-4xl mb-3">🏢</div>
+          <h2 className="text-xl font-bold mb-2">No Warehouse Assigned</h2>
+          <p className="text-sm text-gray-400">
+            Please create or assign a warehouse to your account before opening the POS terminal.
+          </p>
+        </div>
       </div>
     );
   }
 
-  // Fetch products with their warehouse inventory relation
+  // Fetch products with their warehouse inventory relation & customers concurrently
   const [dbProducts, customers] = await Promise.all([
     prisma.product.findMany({
       where: { companyId: user.companyId },
       include: {
-        inventories: { // <-- Fixed relation key name
+        inventories: {
           where: { warehouseId: targetWarehouseId },
           select: { quantity: true },
         },
@@ -60,21 +65,23 @@ export default async function PosPage({
     }),
   ]);
 
-  // Format products and compute stock for target warehouse
+  // Format products: convert Decimal prices to Numbers for Client Component serialization
   const products = dbProducts.map((prod) => ({
     id: prod.id,
     name: prod.name,
-    price: prod.price,
+    price: Number(prod.price),
     currentStock: prod.inventories[0]?.quantity ?? 0,
   }));
 
   return (
-    <PosTerminal
-      companyId={user.companyId}
-      warehouseId={targetWarehouseId}
-      userId={user.id}
-      products={products}
-      customers={customers}
-    />
+    <main className="h-screen w-full overflow-hidden bg-gray-950">
+      <PosTerminal
+        companyId={user.companyId}
+        warehouseId={targetWarehouseId}
+        userId={user.id}
+        products={products}
+        customers={customers}
+      />
+    </main>
   );
 }

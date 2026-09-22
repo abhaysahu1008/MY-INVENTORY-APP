@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import StaffList from "./Employees";
 import Warehouses from "./Warehouses";
 
 interface OwnerPageProps {
@@ -10,98 +9,112 @@ interface OwnerPageProps {
 
 export default function OwnerPage({ companySlug, companyId }: OwnerPageProps) {
   return (
-    <div className="p-4 p-6 md:p-10 min-h-screen bg-zinc-950 space-y-10">
+    <div className="p-8 md:p-12 min-h-screen bg-gray-950 text-gray-100 space-y-8 w-full">
 
-      <div className="border-b border-zinc-800 pb-6">
-        <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
-          Owner Dashboard
-        </h1>
-        <p className="text-base text-zinc-400 mt-2">
-          {companySlug ? (
-            <span>Currently managing: <strong className="text-yellow-200">{companySlug}</strong></span>
-          ) : (
-            "No company set up yet. Create one below to begin."
-          )}
-        </p>
-      </div>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-gray-800 pb-6">
+        <div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Owner Dashboard</h1>
+          <p className="text-sm text-gray-400 mt-1">
+            Managing company: <span className="text-blue-400 font-semibold">{companySlug}</span>
+          </p>
+        </div>
 
-      <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 md:p-8 shadow-inner">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
-          {/* <div>
-            <h2 className="text-xl font-bold text-yellow-950">
-              {companySlug ? "Staff Management Portal" : "Company Initialization"}
-            </h2>
-            <p className="text-sm text-yellow-800 mt-1 max-w-lg">
-              {companySlug
-                ? "Assign new Managers or Employees to this company. Staff accounts will gain scoped access to dashboard features."
-                : "Setup your primary company to activate staff management and dashboard features."}
-            </p>
-          </div> */}
-
-          <div className="flex-shrink-0">
-            {companySlug ? (
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto">
-                <Link
-                  href={`/dashboard/${companySlug}/add-staff?role=MANAGER&companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
-                >
-                  Add Manager
-                </Link>
-
-                <Link
-                  href={`/dashboard/${companySlug}/add-staff?role=EMPLOYEE&companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
-                >
-                  Add Employee
-                </Link>
-
-                <Link
-                  href={`/dashboard/${companySlug}/add-warehouse?companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
-                >
-                  Add Warehouse
-                </Link>
-
-                <Link
-                  href={`/dashboard/${companySlug}/add-supplier?companyId=${companyId}`}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-md w-full"
-                >
-                  Add Supplier
-                </Link>
-              </div>
-            ) : (
-              <Link
-                href="/add-company"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-yellow-950 hover:bg-black text-yellow-50 font-semibold rounded-xl text-sm transition shadow-lg"
-              >
-                🏢 + Create Your Company
-              </Link>
-            )}
-          </div>
+        <div className="flex items-center gap-3">
           <Link
             href={`/dashboard/${companySlug}/add-product?companyId=${companyId}`}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl transition shadow-lg active:scale-95"
           >
-            <span className="text-2xl">+ Add Product</span>
+            + Add Product
           </Link>
           <Link
             href={`/dashboard/${companySlug}/purchase-product?companyId=${companyId}`}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
+            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm rounded-xl transition shadow-lg active:scale-95"
           >
-            <span className="text-2xl">Purchase Product</span>
+            Purchase Stock
           </Link>
         </div>
       </div>
 
-      <Suspense fallback={<div>Loading Staffs...</div>}>
-        {companySlug && companyId && <StaffList companyId={companyId} />}
-      </Suspense>
-      <Suspense fallback={<div>Loading Warehouse...</div>}>
-        {companySlug && companyId && <Warehouses companyId={companyId} companySlug={companySlug} />}
-      </Suspense>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-sm">
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Valuation</span>
+          <p className="text-3xl font-black text-white mt-2">$45,210.00</p>
+        </div>
 
+        <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-sm">
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Low Stock Alerts</span>
+          <p className="text-3xl font-black text-amber-400 mt-2">3 Items</p>
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-sm">
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Warehouses</span>
+          <p className="text-3xl font-black text-white mt-2">2 Facilities</p>
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-sm">
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Team Members</span>
+          <p className="text-3xl font-black text-blue-400 mt-2">5 Active</p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-wrap items-center gap-3 text-sm">
+        <span className="text-gray-400 font-bold uppercase tracking-wider text-xs mr-2">
+          Quick Setup:
+        </span>
+        <Link
+          href={`/dashboard/${companySlug}/add-staff?role=MANAGER&companyId=${companyId}`}
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 transition font-medium"
+        >
+          + Add Manager
+        </Link>
+        <Link
+          href={`/dashboard/${companySlug}/add-staff?role=EMPLOYEE&companyId=${companyId}`}
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 transition font-medium"
+        >
+          + Add Employee
+        </Link>
+        <Link
+          href={`/dashboard/${companySlug}/add-warehouse?companyId=${companyId}`}
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 transition font-medium"
+        >
+          + Add Warehouse
+        </Link>
+        <Link
+          href={`/dashboard/${companySlug}/add-supplier?companyId=${companyId}`}
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 transition font-medium"
+        >
+          + Add Supplier
+        </Link>
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 space-y-6">
+          <Suspense fallback={<div className="text-gray-500 text-sm">Loading Warehouses...</div>}>
+            {companySlug && companyId && (
+              <Warehouses companyId={companyId} companySlug={companySlug} />
+            )}
+          </Suspense>
+        </div>
+
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-base font-bold text-white mb-2">System Roles & Staff</h2>
+            <p className="text-sm text-gray-400 mb-6">
+              2 Managers and 3 Employees assigned across operational warehouses.
+            </p>
+            <Link
+              href={`/dashboard/${companySlug}/staff`}
+              className="inline-flex items-center text-sm font-semibold text-blue-400 hover:text-blue-300 transition"
+            >
+              View all staff members &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

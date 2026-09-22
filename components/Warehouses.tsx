@@ -1,5 +1,5 @@
-import React from 'react';
-import { prisma } from '../app/lib/prisma';
+import React from "react";
+import { prisma } from "../app/lib/prisma";
 
 interface WarehousesProps {
   companyId: number;
@@ -8,21 +8,17 @@ interface WarehousesProps {
 
 const Warehouses = async ({ companyId, companySlug }: WarehousesProps) => {
   const allWarehouses = await prisma.warehouse.findMany({
-    where: {
-      companyId: companyId,
-    },
+    where: { companyId },
   });
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-100 shadow-xl space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
         <div>
-          <h3 className="text-xl font-bold tracking-tight text-zinc-100">
-            Warehouses
-          </h3>
+          <h3 className="text-xl font-bold tracking-tight text-zinc-100">Warehouses</h3>
           <p className="text-xs text-zinc-400 mt-1">
-            Active facilities registered under : <span className="text-yellow-200 font-semibold">{companySlug}</span>
+            Active facilities registered under:{" "}
+            <span className="text-yellow-200 font-semibold">{companySlug}</span>
           </p>
         </div>
         <span className="rounded-full bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-400 border border-yellow-500/20">
@@ -30,7 +26,6 @@ const Warehouses = async ({ companyId, companySlug }: WarehousesProps) => {
         </span>
       </div>
 
-      {/* Empty State */}
       {allWarehouses.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-950/50 p-8 text-center">
           <div className="text-3xl mb-2">🏭</div>
@@ -40,7 +35,6 @@ const Warehouses = async ({ companyId, companySlug }: WarehousesProps) => {
           </p>
         </div>
       ) : (
-        /* Grid of Warehouse Cards */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allWarehouses.map((warehouse) => (
             <div
@@ -73,7 +67,9 @@ const Warehouses = async ({ companyId, companySlug }: WarehousesProps) => {
               </div>
 
               <div className="pt-3 border-t border-zinc-900 flex items-center justify-between text-[11px] text-zinc-500">
-                <span>Status: <span className="text-emerald-400 font-medium">Active</span></span>
+                <span>
+                  Status: <span className="text-emerald-400 font-medium">Active</span>
+                </span>
                 <span>ID: #{warehouse.id}</span>
               </div>
             </div>

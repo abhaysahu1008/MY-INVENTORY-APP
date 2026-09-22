@@ -15,7 +15,7 @@ interface LowStockAlertsProps {
 export default function LowStockAlerts({ items }: LowStockAlertsProps) {
   if (items.length === 0) {
     return (
-      <div className="p-4 bg-green-950/40 border border-green-800 rounded-lg text-green-300 text-sm flex items-center justify-between">
+      <div className="p-4 bg-green-950/40 border border-green-800 rounded-2xl text-green-300 text-sm flex items-center justify-between">
         <span>All product inventory levels are healthy!</span>
         <span className="font-bold">✓ Normal</span>
       </div>
@@ -23,13 +23,13 @@ export default function LowStockAlerts({ items }: LowStockAlertsProps) {
   }
 
   return (
-    <div className="bg-gray-800 border border-red-900/50 rounded-lg p-5 shadow-sm space-y-4">
-      <div className="flex items-center justify-between border-b border-gray-700 pb-3">
+    <div className="bg-gray-900 border border-red-900/50 rounded-2xl p-5 shadow-sm space-y-4">
+      <div className="flex items-center justify-between border-b border-gray-800 pb-3">
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
           <h3 className="font-bold text-white text-lg">Low Stock Warnings</h3>
         </div>
-        <span className="text-xs bg-red-950 text-red-300 border border-red-800 px-2 py-0.5 rounded-full font-semibold">
+        <span className="text-xs bg-red-950 text-red-300 border border-red-800 px-2.5 py-1 rounded-full font-semibold">
           {items.length} item(s) low
         </span>
       </div>
@@ -38,7 +38,7 @@ export default function LowStockAlerts({ items }: LowStockAlertsProps) {
         {items.map((item) => (
           <div
             key={`${item.id}-${item.warehouseName}`}
-            className="flex items-center justify-between bg-gray-900/80 border border-gray-700 p-3 rounded text-sm"
+            className="flex items-center justify-between bg-gray-950/80 border border-gray-800 p-3 rounded-xl text-sm"
           >
             <div>
               <p className="font-semibold text-white">{item.productName}</p>
