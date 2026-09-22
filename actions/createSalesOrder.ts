@@ -95,14 +95,18 @@ export async function createSalesOrder(payload: CreateSalesOrderInput) {
       { maxWait: 10000, timeout: 20000 }
     );
 
-    revalidatePath("/inventory");
-    revalidatePath("/dashboard");
+    // --- UPDATED REVALIDATIONS ---
+    revalidatePath("/dashboard/[company]/pos", "page");
+    revalidatePath("/dashboard/[company]/inventory", "page");
+    revalidatePath("/dashboard/[company]/sales", "page");
+    revalidatePath("/dashboard", "layout");
+
     return { success: true, orderId: result.id };
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     console.error("Prisma Invocation Error Details:", error);
 
-    const errorMessage = error instanceof Error ? error.message : "Database transaction failed.";
+    const errorMessage =
+      error instanceof Error ? error.message : "Database transaction failed.";
 
     return {
       success: false,
