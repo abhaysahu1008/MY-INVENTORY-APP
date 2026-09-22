@@ -26,7 +26,6 @@ export async function createSalesOrder(payload: CreateSalesOrderInput) {
 
     const result = await prisma.$transaction(
       async (tx) => {
-        // 1. Check stock availability for all items
         for (const item of payload.items) {
           const inv = await tx.inventory.findUnique({
             where: {

@@ -23,7 +23,6 @@ export default async function DashboardLayout({
 
   return (
     <main className="min-h-screen flex bg-zinc-950 text-zinc-100">
-      <Sidebar />
       <div className="flex flex-1 flex-col min-w-0">
         <Header />
         <div className="flex-1 p-6">

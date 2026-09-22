@@ -1,38 +1,41 @@
-import Link from 'next/link';
-import React from 'react';
+"use client";
 
-const Sidebar = () => {
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+export default function Sidebar({ companySlug }: { companySlug: string }) {
+  const pathname = usePathname();
 
+  // Guard against undefined prop fallback
+  const slug = companySlug || "tooyumm-coorp";
+
+  const navItems = [
+    { name: "POS Terminal", href: `/dashboard/${slug}/pos` },
+    { name: "Inventory & Stock", href: `/dashboard/${slug}/inventory` },
+    { name: "Sales History", href: `/dashboard/${slug}/sales` },
+  ];
 
   return (
-    <aside className="min-h-screen w-[300px] bg-zinc-900 border-r border-zinc-800 p-4 flex flex-col gap-2">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2 px-2">
-        Management
-      </h2>
+    <aside className="w-64 bg-gray-900 border-r border-gray-800 p-4 space-y-4">
 
-      <Link
-        href={"/"}
-        className="px-4 py-2 text-sm font-medium rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 transition-colors text-left"
-      >
-        Add Warehouse
-      </Link>
 
-      <Link
-        href="/dashboard/manager/add"
-        className="px-4 py-2 text-sm font-medium rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 transition-colors text-left"
-      >
-        Add Manager
-      </Link>
-
-      <Link
-        href="/dashboard/employee/add"
-        className="px-4 py-2 text-sm font-medium rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 transition-colors text-left"
-      >
-        Add Employee
-      </Link>
+      <nav className="space-y-1">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition ${isActive
+                ? "bg-gray-800 text-white font-semibold"
+                : "text-gray-400 hover:bg-gray-850 hover:text-gray-200"
+                }`}
+            >
+              {item.name}
+            </Link>
+          );
+        })}
+      </nav>
     </aside>
   );
-};
-
-export default Sidebar;
+}
