@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "../../../app/generated/prisma/enums";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";

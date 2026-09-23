@@ -1,24 +1,21 @@
 "use client";
 
-export interface SalesOrderItem {
+interface SalesOrderItem {
   id: number;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  product?: {
-    name: string;
-  };
+  product: { name: string };
 }
 
-export interface SalesOrder {
+interface SalesOrder {
   id: number;
+  createdAt: Date | string;
   totalAmount: number;
-  createdAt: string;
+  // Support BOTH shapes:
+  customer?: { name: string } | null;
   customerName?: string | null;
-  paymentMethod?: string | null;
-  warehouse?: {
-    name: string;
-  } | null;
+  user?: { name: string | null; email: string } | null;
   items: SalesOrderItem[];
 }
 
@@ -33,6 +30,10 @@ export default function ReceiptModal({ order, onClose }: ReceiptModalProps) {
   const handlePrint = () => {
     window.print();
   };
+
+  // Resolve customer name from either shape
+  const customerName =
+    order.customer?.name || order.customerName || "Walk-in Customer";
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
@@ -49,7 +50,7 @@ export default function ReceiptModal({ order, onClose }: ReceiptModalProps) {
           <div className="text-xs space-y-1">
             <p>
               <span className="font-semibold">Customer:</span>{" "}
-              {order.customer?.name || "Walk-in Customer"}
+              {customerName}
             </p>
             <p>
               <span className="font-semibold">Cashier:</span>{" "}
