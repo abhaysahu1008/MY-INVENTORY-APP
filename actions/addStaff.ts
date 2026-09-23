@@ -1,10 +1,10 @@
 "use server";
 
-import { Role } from "@prisma/client";
 import { hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "../app/lib/prisma";
+import { Role } from "../app/generated/prisma/enums";
 
 export async function getWarehouses(companyIdStr: string) {
   try {
